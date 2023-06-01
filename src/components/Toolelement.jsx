@@ -15,18 +15,25 @@ function Toolelement(props) {
 
   return (
     <li>
-      <div className={`${props.divClass}${isHovered ? "_hovered" : ""}`}>
+      <div
+        className={`${props.divClass}${
+          isHovered && props.isExpanded ? "_hovered" : ""
+        }`}
+      >
         <button
           type="button"
           className={`btn ${props.btnClass} component_btn`}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >
-          {props.content}
+          {props.isExpanded ? props.content : props.abrieviated}
         </button>
-        <span className={`tooltip ${props.divClass}_tooltip`}>
-          {props.tipContent}
-        </span>
+
+        {props.isExpanded && (
+          <span className={`tooltip ${props.divClass}_tooltip`}>
+            {props.tipContent}
+          </span>
+        )}
       </div>
     </li>
   );

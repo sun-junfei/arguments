@@ -16,37 +16,52 @@ code {
     monospace;
 }
 
-
 /* for Toolbox */
+
 .toolbox_sidebar{
   position:fixed;
   top:0;
   right:0%;
   height: 100%;
-  width:240px;
+  width: 70px;
   background-color: #1E2022;
-
-
+  transition: all 0.2s ease;
+  white-space: nowrap;
 }
+
+.toolbox_sidebar.expanded{
+  width:230px;
+}
+
 
 .toolbox_sidebar .logo_content .logo{
   color: #fff;
   display: flex;
   height: 50px;
-  padding-left: 30px;
-  padding-right: 10px;
+  padding-left: 17.5px;
+
   width: 100%;
   align-items: center;
 }
 
-.toolbox_sidebar .logo_content i{
-  font-size: 28px;
-  padding-left: 10px;
+.toolbox_sidebar .logo_content .logo .btn{
+  height:37px;
+  width:33px;
+  display: flex;
+  
+  
+  align-items: center;
+  padding: 0;
+}
+
+.toolbox_sidebar .logo_content .logo .btn i{
+  font-size: 30px;
 }
 
 .toolbox_sidebar .logo_content .logo_name{
-  font-size: 20px;
+  font-size: 19px;
   font-weight: 400;
+  font-family: 'Nanum Gothic', sans-serif;
 }
 
 .toolbox_sidebar ul{
@@ -60,6 +75,8 @@ code {
   width: 100%;
   list-style: none;
   text-align: center;
+  font-family: 'Playfair Display', serif;
+  
 }
 
 
@@ -73,11 +90,12 @@ code {
   position: absolute;
   height: 120px;
   width: 170px;
-  right: 240px;
+  right: 230px;
   top: 0%;
   line-height: 20px;
   text-align: center;
   opacity: 0;
+  font-family: 'Times New Roman'
 }
 
 .toolbox_sidebar ul li .component_btn:hover + .tooltip{
