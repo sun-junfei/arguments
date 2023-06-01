@@ -1,5 +1,9 @@
 body {
   margin: 0;
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  overflow: hidden;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
@@ -10,4 +14,115 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+
+/* for Toolbox */
+.toolbox_sidebar{
+  position:fixed;
+  top:0;
+  right:0%;
+  height: 100%;
+  width:240px;
+  background-color: #1E2022;
+
+
+}
+
+.toolbox_sidebar .logo_content .logo{
+  color: #fff;
+  display: flex;
+  height: 50px;
+  padding-left: 30px;
+  padding-right: 10px;
+  width: 100%;
+  align-items: center;
+}
+
+.toolbox_sidebar .logo_content i{
+  font-size: 28px;
+  padding-left: 10px;
+}
+
+.toolbox_sidebar .logo_content .logo_name{
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.toolbox_sidebar ul{
+  margin-top: 20px;
+  padding: 0%;
+}
+
+.toolbox_sidebar ul li{
+  position: relative;
+  height: 50px;
+  width: 100%;
+  list-style: none;
+  text-align: center;
+}
+
+
+.toolbox_sidebar ul li .component_text{
+  color: #fff;
+  display: inline-flex;
+  margin-left: 5px;
+}
+
+.toolbox_sidebar ul li .tooltip{
+  position: absolute;
+  height: 120px;
+  width: 170px;
+  right: 240px;
+  top: 0%;
+  line-height: 20px;
+  text-align: center;
+  opacity: 0;
+}
+
+.toolbox_sidebar ul li .component_btn:hover + .tooltip{
+  opacity: 1;
+}
+
+.def_hovered{
+  background-color: #0d6efd;
+}
+
+.def_tooltip{
+  background-color: #0d6efd;
+  color:#fff;
+}
+
+.prop_hovered{
+  background-color: #198754;
+}
+
+.prop_tooltip{
+  background-color: #198754;
+  color:#fff;
+}
+
+.evid_hovered{
+  background-color: #0dcaf0;
+}
+
+.evid_tooltip{
+  background-color: #0dcaf0;
+}
+
+.con_hovered{
+  background-color: #dc3545;
+}
+
+.con_tooltip{
+  background-color: #dc3545;
+  color:#fff;
+}
+
+.note_hovered{
+  background-color: #ffc107;
+}
+
+.note_tooltip{
+  background-color: #ffc107;
 }
