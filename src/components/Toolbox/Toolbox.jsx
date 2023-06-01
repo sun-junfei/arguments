@@ -33,6 +33,7 @@ function Toolbox(props) {
           abrieviated={"Def"}
           tipContent={"Used to make a definition for a specific term"}
           isExpanded={isExpanded}
+          clickedList={props.clickedList}
         />
         <Toolelement
           btnClass={"btn-outline-success"}
@@ -43,16 +44,18 @@ function Toolbox(props) {
             "Make a proposition that takes a statement which will be proven to be correct, this can be any proposition from the general thesis to a subargument"
           }
           isExpanded={isExpanded}
+          clickedList={props.clickedList}
         />
         <Toolelement
           btnClass={"btn-outline-info"}
-          divClass={"evid"}
+          divClass={"evi"}
           content={"Evidence"}
           abrieviated={"Evi"}
           tipContent={
             "A piece of evidence used to support a proposition in the proof"
           }
           isExpanded={isExpanded}
+          clickedList={props.clickedList}
         />
         <Toolelement
           btnClass={"btn-outline-danger"}
@@ -63,6 +66,7 @@ function Toolbox(props) {
             "A counter argument to a proposition that has been raised"
           }
           isExpanded={isExpanded}
+          clickedList={props.clickedList}
         />
         <Toolelement
           btnClass={"btn-outline-warning"}
@@ -73,6 +77,7 @@ function Toolbox(props) {
             "Some side note to address some contents that is worth mentioning but will break the flow of reasoning if put into the normal proof"
           }
           isExpanded={isExpanded}
+          clickedList={props.clickedList}
         />
       </ul>
     </div>

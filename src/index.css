@@ -16,6 +16,11 @@ code {
     monospace;
 }
 
+/* for Workspace*/
+.add_mode *{
+  cursor: none;
+}
+
 /* for Toolbox */
 
 .toolbox_sidebar{
@@ -25,7 +30,7 @@ code {
   height: 100%;
   width: 70px;
   background-color: #1E2022;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   white-space: nowrap;
 }
 
@@ -61,6 +66,7 @@ code {
 .toolbox_sidebar .logo_content .logo_name{
   font-size: 19px;
   font-weight: 400;
+  margin-left: 5px;
   font-family: 'Nanum Gothic', sans-serif;
 }
 
@@ -120,11 +126,11 @@ code {
   color:#fff;
 }
 
-.evid_hovered{
+.evi_hovered{
   background-color: #0dcaf0;
 }
 
-.evid_tooltip{
+.evi_tooltip{
   background-color: #0dcaf0;
 }
 
@@ -143,4 +149,12 @@ code {
 
 .note_tooltip{
   background-color: #ffc107;
+}
+
+/* for Canvas*/
+
+.canvas{
+  min-height: 100vh;
+  min-width: 50vw;
+  overflow: scroll;
 }
