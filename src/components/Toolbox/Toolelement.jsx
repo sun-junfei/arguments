@@ -13,6 +13,12 @@ function Toolelement(props) {
     setIsHovered(false);
   }
 
+  /* handle clicked state */
+  function handleOnClick() {
+    props.clickedList[1](props.divClass);
+    console.log(props.clickedList[0]);
+  }
+
   return (
     <li>
       <div
@@ -25,6 +31,7 @@ function Toolelement(props) {
           className={`btn ${props.btnClass} component_btn`}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
+          onClick={handleOnClick}
         >
           {props.isExpanded ? props.content : props.abrieviated}
         </button>
