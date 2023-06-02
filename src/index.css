@@ -154,7 +154,41 @@ code {
 /* for Canvas*/
 
 .canvas{
-  min-height: 100vh;
-  min-width: 50vw;
-  overflow: scroll;
+  min-height: 200vh;
+  min-width: 100vw;
+  overflow: hidden;
+  background: #ECF8F9;
+}
+
+/* for inputbox */
+.defbox{
+  width:300px;
+  height: 200px;
+  border-radius: 6px;
+  border-color: #0d6efd;
+}
+
+.def_badge_box{
+  text-align: right;
+}
+
+.defbox .def_badge_box .def_badge{
+  height: 100%;
+  font-size: 100%;
+  width: 100%;
+  font-family: 'Times New Roman', Times, serif;
+}
+
+.defbox .term_box .term_input{
+  background: transparent;
+    border: none;
+    border-bottom: 1.5px solid #0d6efd;
+    outline: none;
+}
+
+.defbox .content_box .def_textarea{
+  background: transparent;
+    border: none;
+    border-bottom: 1.5px solid #0d6efd;
+    outline: none;
 }
