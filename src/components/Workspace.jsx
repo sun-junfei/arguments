@@ -10,7 +10,7 @@ function Workspace(props) {
   return (
     <div className={clicked != null ? "add_mode" : ""}>
       {clicked != null && <Cursor clicked={clicked} />}
-      <Canvas />
+      <Canvas clickedList={[clicked, setClicked]} />
       <Toolbox clickedList={[clicked, setClicked]} />
     </div>
   );

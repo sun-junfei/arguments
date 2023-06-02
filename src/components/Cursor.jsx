@@ -3,7 +3,6 @@ import { useMousePosition } from "./Util";
 
 function Cursor(props) {
   const { clientX, clientY } = useMousePosition();
-  console.log(clientX, clientY);
 
   return (
     <div
@@ -31,7 +30,11 @@ function Cursor(props) {
         {(() => {
           switch (props.clicked) {
             case "def":
-              return <span class="badge text-bg-primary">Def</span>;
+              return (
+                <span class="badge rounded-pill text-bg-primary def_badge">
+                  Def:
+                </span>
+              );
             case "prop":
               return <span class="badge text-bg-success">Prop</span>;
             case "evi":
