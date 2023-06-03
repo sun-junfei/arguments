@@ -161,37 +161,107 @@ code {
 }
 
 /* for inputbox */
-.defbox{
-  width:300px;
 
+.defbox{
+  width: 400px;
+}
+
+.term_box{
+  background-color: #0d6efd;
   border-radius: 16px;
   border-color: #0d6efd;
   border-style: solid;
+  transition: all 0.1s ease;
+  cursor: move;
 }
 
-.def_badge_box{
-  text-align: right;
+
+
+.defbox .expanded_term{
+  border-radius: 16px 16px 0 0;
 }
 
-.def_badge{
-  height: 27.333px;
-  font-size: 100%;
-  width: 82.656px;
+.defbox .row{
+  width: 100%;
+  margin: 0;
+}
+
+.defbox .term_box{
+  min-width: 50%;
+  max-width: 95%;
+}
+
+.defbox .term_box .label_box{
+  text-align: center;
+  padding: 0%;
+}
+
+.defbox .term_box .input_box{
+  text-align: center;
+  padding: 0%;
+}
+
+.defbox .term_box .expand_box{
+  text-align: center;
+  padding: 0%;
+  color: #fff;
+  
+}
+
+.defbox .term_box .expand_box .btn{
+  padding: 0%;
+  background-color: #7149C6;
+  transition: all 0.3s ease;
+}
+
+
+
+.defbox .term_box .term_label{
+  color: #ECF8F9;
+  font-weight: bold;
   font-family: 'Times New Roman', Times, serif;
+  font-size: 17;
 }
 
-.defbox .term_box .term_input{
+
+.defbox .term_box .input_box .term_input{
   background: transparent;
-    border: none;
-    border-bottom: 1.5px solid #0d6efd;
-    outline: none;
+  border: none;
+  border-bottom: 1.5px solid #ECF8F9;
+  outline: none;
+  caret-color: #fff;
+  color: #fff;
+  font-family: 'Times New Roman', Times, serif;
+  width: 100%;
 }
+
+.defbox .term_box .term_input::placeholder{
+  color: #9DB2BF;
+}
+
+.defbox .content_box{
+  border-radius:  0 16px 16px 16px;
+  border-color: #0d6efd;
+  border-style: solid;
+  overflow: hidden;
+  transition: all 0.1s ease;
+  cursor: move;
+  
+}
+
+.defbox .retracted_content{
+  height: 0;
+  border: none;
+  border-radius: 16px;
+}
+
 
 .defbox .content_box .def_textarea{
   background: transparent;
   border: none;
   border-bottom: 1.5px solid #0d6efd;
   outline: none;
-  width: 90%;
+  width: 100%;
   margin: 0 auto;
 }
+

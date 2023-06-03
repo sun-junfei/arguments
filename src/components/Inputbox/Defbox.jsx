@@ -1,54 +1,115 @@
 import { useRef, useState, useEffect } from "react";
+import Draggable, { DraggableCore } from "react-draggable";
+// import { Resizable } from "react-resizable";
 
-import { useAutosizeTextArea } from "../Util";
+import { useAutosizeTextArea, useAutosizeInput } from "../Util";
 
 function Defbox(props) {
-  const [value, setValue] = useState("");
+  const [textvalue, setTextValue] = useState("");
   const textAreaRef = useRef(null);
   const defBoxRef = useRef(null);
+  const inputRef = useRef(null);
+  const termBoxRef = useRef(null);
+  const [inputvalue, setInputValue] = useState("");
 
-  useAutosizeTextArea(defBoxRef.current, textAreaRef.current, value);
+  const [isExpanded, setIsExpanded] = useState(true);
 
-  const handleChange = (evt) => {
+  useAutosizeTextArea(defBoxRef.current, textAreaRef.current, textvalue); // update textarea height
+
+  const handleTextChange = (evt) => {
     const val = evt.target?.value;
 
-    setValue(val);
+    setTextValue(val);
   };
 
+  useAutosizeInput(termBoxRef.current, inputRef.current, inputvalue); // update input width
+
+  const handleInputChange = (evt) => {
+    const val = evt.target?.value;
+
+    setInputValue(val);
+  };
+
+  function handleOnClick() {
+    if (isExpanded) {
+      setIsExpanded(false);
+    } else if (!isExpanded) {
+      setIsExpanded(true);
+    }
+  }
+
   return (
-    <div
-      className="defbox"
-      ref={defBoxRef}
-      style={{
-        position: "absolute",
-        top: props.positionY,
-        left: props.positionX,
-      }}
+    <Draggable
+      className="def_drag"
+      cancel=".defbox .term_box .input_box, .defbox .term_box .expand_box, .defbox .content_box .def_textarea"
     >
-      <div class="row">
-        <div class="col-4 def_badge_box">
-          <span class="badge rounded-pill text-bg-primary def_badge">Def:</span>
+      <div
+        className="defbox"
+        ref={defBoxRef}
+        style={{
+          position: "absolute",
+          top: props.positionY,
+          left: props.positionX,
+        }}
+        id={props.index + "_def_box"}
+      >
+        <div class="row">
+          <div
+            className={`col-6 term_box ${isExpanded ? "expanded_term" : ""} `}
+            ref={termBoxRef}
+          >
+            <div class="row term_row_box">
+              <div class="col-3 label_box">
+                <label className="term_label" for={props.index + "_term_input"}>
+                  Def:
+                </label>
+              </div>
+              <div class="col-8 input_box">
+                <input
+                  type="text"
+                  ref={inputRef}
+                  id={props.index + "_term_input"}
+                  className="term_input"
+                  placeholder="Term to define"
+                  onChange={handleInputChange}
+                  value={inputvalue}
+                  spellCheck="false"
+                />
+              </div>
+              <div class="col-1 expand_box">
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  onClick={handleOnClick}
+                >
+                  {isExpanded ? (
+                    <i class="bx bx-collapse-vertical"></i>
+                  ) : (
+                    <i class="bx bx-expand-vertical"></i>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="col-8 term_box">
-          <input
-            type="text"
-            className="term_input"
-            placeholder="Term to define"
-          />
+
+        <div class="row content_row_box">
+          <div
+            className={`content_box ${isExpanded ? "" : "retracted_content"}`}
+          >
+            <textarea
+              id="definition_text"
+              className="def_textarea"
+              onChange={handleTextChange}
+              ref={textAreaRef}
+              placeholder="Definition"
+              rows={1}
+              value={textvalue}
+            />
+          </div>
         </div>
       </div>
-      <div class="row content_box">
-        <textarea
-          id="definition_text"
-          className="def_textarea"
-          onChange={handleChange}
-          ref={textAreaRef}
-          placeholder="Definition"
-          rows={1}
-          value={value}
-        />
-      </div>
-    </div>
+    </Draggable>
   );
 }
 
