@@ -172,11 +172,13 @@ code {
   border-color: #0d6efd;
   border-style: solid;
   transition: all 0.1s ease;
+  cursor: move;
 }
+
+
 
 .defbox .expanded_term{
   border-radius: 16px 16px 0 0;
-
 }
 
 .defbox .row{
@@ -242,7 +244,9 @@ code {
   border-color: #0d6efd;
   border-style: solid;
   overflow: hidden;
-  transition: all 0.3s ease;
+  transition: all 0.1s ease;
+  cursor: move;
+  
 }
 
 .defbox .retracted_content{
@@ -250,6 +254,7 @@ code {
   border: none;
   border-radius: 16px;
 }
+
 
 .defbox .content_box .def_textarea{
   background: transparent;
@@ -259,3 +264,4 @@ code {
   width: 100%;
   margin: 0 auto;
 }
+

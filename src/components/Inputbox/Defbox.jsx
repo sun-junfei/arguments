@@ -1,5 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 import Draggable, { DraggableCore } from "react-draggable";
+// import { Resizable } from "react-resizable";
 
 import { useAutosizeTextArea, useAutosizeInput } from "../Util";
 
@@ -38,7 +39,10 @@ function Defbox(props) {
   }
 
   return (
-    <Draggable cancel=".defbox .term_box .input_box, .defbox .term_box .expand_box, .defbox .content_box .def_textarea">
+    <Draggable
+      className="def_drag"
+      cancel=".defbox .term_box .input_box, .defbox .term_box .expand_box, .defbox .content_box .def_textarea"
+    >
       <div
         className="defbox"
         ref={defBoxRef}
@@ -89,7 +93,7 @@ function Defbox(props) {
           </div>
         </div>
 
-        <div class="row">
+        <div class="row content_row_box">
           <div
             className={`content_box ${isExpanded ? "" : "retracted_content"}`}
           >
