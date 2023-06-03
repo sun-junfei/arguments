@@ -39,7 +39,7 @@ function Canvas(props) {
   };
 
   return (
-    <Draggable>
+    <Draggable cancel=".defbox .term_box, .defbox .content_box">
       <div className="canvas" onClick={handleOnClick} ref={canvasRef}>
         {defPosList.map((defPos, index) => {
           return (
