@@ -163,7 +163,7 @@ code {
 /* for inputbox */
 
 .defbox{
-  width: 400px;
+  min-width: 400px;
 }
 
 .term_box{
@@ -175,8 +175,6 @@ code {
   cursor: move;
 }
 
-
-
 .defbox .expanded_term{
   border-radius: 16px 16px 0 0;
 }
@@ -187,25 +185,26 @@ code {
 }
 
 .defbox .term_box{
-  min-width: 50%;
   max-width: 95%;
+  width: fit-content;
 }
 
 .defbox .term_box .label_box{
   text-align: center;
-  padding: 0%;
+  padding: 0 5px 0 0;
 }
 
 .defbox .term_box .input_box{
-  text-align: center;
-  padding: 0%;
+  text-align: left;
+  padding:0;
+  overflow: hidden;
+  max-width: 250px;
 }
 
 .defbox .term_box .expand_box{
   text-align: center;
-  padding: 0%;
+  padding: 0 0 0 5px;
   color: #fff;
-  
 }
 
 .defbox .term_box .expand_box .btn{
@@ -214,13 +213,13 @@ code {
   transition: all 0.3s ease;
 }
 
-
-
 .defbox .term_box .term_label{
   color: #ECF8F9;
   font-weight: bold;
   font-family: 'Times New Roman', Times, serif;
   font-size: 17;
+  cursor: move;
+  width: fit-content;
 }
 
 
@@ -232,7 +231,8 @@ code {
   caret-color: #fff;
   color: #fff;
   font-family: 'Times New Roman', Times, serif;
-  width: 100%;
+  width: 100px;
+  min-width: 100px;
 }
 
 .defbox .term_box .term_input::placeholder{
@@ -246,7 +246,8 @@ code {
   overflow: hidden;
   transition: all 0.1s ease;
   cursor: move;
-  
+  resize: horizontal;
+  min-width: 400px;
 }
 
 .defbox .retracted_content{
@@ -263,5 +264,102 @@ code {
   outline: none;
   width: 100%;
   margin: 0 auto;
+  overflow: hidden;
+  resize: none;
+  
 }
 
+/* For Singlebox */
+
+.single_box{
+  border-radius: 16px;
+  border-style: solid;
+  transition: all 0.1s ease;
+  cursor: move;
+}
+
+
+.Propbox{
+  background-color: #198754;
+  border-color: #198754;
+}
+
+.single_box .expanded_term{
+  border-radius: 16px 16px 0 0;
+}
+
+.single_box .row{
+  width: 100%;
+  margin: 0;
+}
+
+.single_box .label_box{
+  text-align: center;
+  padding: 0 5px;
+}
+
+.single_box .label_box .term_label{
+  margin: 0 auto;
+}
+
+/* .single_box .expand_box{
+  padding: 0%;
+} */
+
+.single_box .expand_box .btn{
+  padding: 0%;
+  transition: all 0.3s ease;
+}
+
+.single_box .label_box .btn{
+  margin: 0 5px;
+  transition: all 0.3s ease;
+}
+
+.Propbox .expand_box .btn{
+  background-color: #41644A;
+}
+
+.single_box .term_label{
+  color: #ECF8F9;
+  font-weight: bold;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 17;
+  cursor: move;
+  
+}
+
+.single_box .content_row_box{
+  padding: 0%;
+}
+
+.single_box  .content_box{
+  border-radius:  16px;
+  border-style: solid;
+  transition: all 0.1s ease;
+  cursor: move;
+}
+
+.Propbox .content_box{
+  border-color: #fff;
+}
+
+.single_box .retracted_content{
+  height: 0;
+  border: none;
+  border-radius: 16px;
+}
+
+.single_box .content_box .single_textarea{
+  background: transparent;
+  border: none;
+  outline: none;
+  margin: 0 auto;
+  color: #ECF8F9;
+  font-size: 85%;
+  resize: horizontal;
+  min-width: 350px;
+  padding: 0 10px;
+  word-wrap: break-word;
+  overflow:hidden;
+}

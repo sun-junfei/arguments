@@ -1,15 +1,22 @@
 import React, { useState, useRef } from "react";
 import Draggable, { DraggableCore } from "react-draggable";
 import Defbox from "./Inputbox/Defbox";
+import Singlebox from "./Inputbox/Singlebox";
 import { click } from "@testing-library/user-event/dist/click";
 
 function Canvas(props) {
   const [defPosList, setDefPosList] = useState([]);
+  const [propPosList, setPropPosList] = useState([]);
   const canvasRef = useRef(null);
 
   function addDefPosList(newDefPos) {
     setDefPosList((prevDefPos) => {
       return [...prevDefPos, newDefPos];
+    });
+  }
+  function addPropPosList(newPropPos) {
+    setPropPosList((prevPropPos) => {
+      return [...prevPropPos, newPropPos];
     });
   }
 
@@ -25,8 +32,11 @@ function Canvas(props) {
       case "def":
         addDefPosList(newPosition);
         props.clickedList[1](null);
+        break;
       case "prop":
-        return <span class="badge text-bg-success">Prop</span>;
+        addPropPosList(newPosition);
+        props.clickedList[1](null);
+        break;
       case "evi":
         return <span class="badge text-bg-info">Evi</span>;
       case "con":
@@ -39,11 +49,22 @@ function Canvas(props) {
   };
 
   return (
-    <Draggable cancel=".defbox .term_box, .defbox .content_box">
+    <Draggable cancel=".defbox .term_box, .defbox .content_box, .single_box .label_box, .single_box .expand_box, .single_box .content_box">
       <div className="canvas" onClick={handleOnClick} ref={canvasRef}>
         {defPosList.map((defPos, index) => {
           return (
             <Defbox positionX={defPos.x} positionY={defPos.y} index={index} />
+          );
+        })}
+
+        {propPosList.map((propPos, index) => {
+          return (
+            <Singlebox
+              positionX={propPos.x}
+              positionY={propPos.y}
+              index={index}
+              singleClass={"Prop"}
+            />
           );
         })}
       </div>
