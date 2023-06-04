@@ -103,7 +103,9 @@ function Singlebox(props) {
               >
                 <textarea
                   id="single_text"
-                  className="single_textarea"
+                  className={`single_textarea ${
+                    isExpanded ? "" : "retracted_textarea"
+                  }`}
                   onChange={handleTextChange}
                   ref={textAreaRef}
                   placeholder={`Enter your ${props.singleClass}`}

@@ -37,8 +37,8 @@ function Cursor(props) {
               );
             case "prop":
               return <span class="badge text-bg-success">Prop</span>;
-            case "evi":
-              return <span class="badge text-bg-info">Evi</span>;
+            case "just":
+              return <span class="badge text-bg-info">Just</span>;
             case "con":
               return <span class="badge text-bg-danger">Con</span>;
             case "note":

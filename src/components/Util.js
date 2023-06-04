@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState, useEffect, useRef } from "react";
 
 const useMousePosition = () => {
   const [position, setPosition] = useState({
@@ -29,7 +29,7 @@ const useMousePosition = () => {
 };
 
 // Updates the height of a <textarea> when the value changes.
-const useAutosizeTextArea = (boxRef, textAreaRef, value, className, width) => {
+const useAutosizeTextArea = (boxRef, textAreaRef, value, className) => {
   useEffect(() => {
     if (textAreaRef) {
       // We need to reset the height momentarily to get the correct scrollHeight for the textarea
@@ -50,7 +50,57 @@ const useAutosizeTextArea = (boxRef, textAreaRef, value, className, width) => {
       textAreaRef.style.height = scrollHeight + "px";
       boxRef.style.height = boxHeight + "px";
     }
-  }, [textAreaRef, value, width]);
+  }, [textAreaRef, value]);
+};
+
+/* for resize auto adjustment */
+
+const useWidthResizeObserver = (ref, callback) => {
+  useEffect(() => {
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const { width } = entry.contentRect;
+        callback(width);
+      }
+    });
+
+    if (ref.current) {
+      resizeObserver.observe(ref.current);
+    }
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, [ref, callback]);
+};
+
+const useAutosizeTextAreaResize = (textRef, boxRef, textAreaRef, className) => {
+  const [isAdjustingHeight, setIsAdjustingHeight] = useState(false);
+
+  useWidthResizeObserver(textRef, (width) => {
+    // Perform actions triggered by width changes
+    if (textAreaRef && !isAdjustingHeight) {
+      setIsAdjustingHeight(true);
+
+      textAreaRef.style.height = "0px";
+      const scrollHeight = textAreaRef.scrollHeight;
+
+      let boxHeight;
+
+      if (className === "single_box") {
+        boxHeight = scrollHeight + 13;
+      } else {
+        boxHeight = scrollHeight + 40;
+      }
+
+      // We then set the height directly, outside of the render loop
+      // Trying to set this with state or a ref will produce an incorrect value.
+      textAreaRef.style.height = scrollHeight + "px";
+      boxRef.style.height = boxHeight + "px";
+
+      setIsAdjustingHeight(false);
+    }
+  });
 };
 
 const useAutosizeInput = (termboxRef, inputRef, value) => {
@@ -72,4 +122,9 @@ const useAutosizeInput = (termboxRef, inputRef, value) => {
   }, [inputRef, value]);
 };
 
-export { useMousePosition, useAutosizeTextArea, useAutosizeInput };
+export {
+  useMousePosition,
+  useAutosizeTextArea,
+  useAutosizeInput,
+  useAutosizeTextAreaResize,
+};

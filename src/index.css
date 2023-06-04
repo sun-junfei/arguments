@@ -126,11 +126,11 @@ code {
   color:#fff;
 }
 
-.evi_hovered{
+.just_hovered{
   background-color: #0dcaf0;
 }
 
-.evi_tooltip{
+.just_tooltip{
   background-color: #0dcaf0;
 }
 
@@ -162,59 +162,136 @@ code {
 
 /* for inputbox */
 
-.defbox{
+
+.Defbox{
   min-width: 400px;
 }
 
-.term_box{
-  background-color: #0d6efd;
+.Propbox{
+  min-width: 500px;
+}
+
+.Justbox{
+  min-width: 500px;
+}
+
+.Conbox{
+  min-width: 500px;
+}
+
+.Notebox{
+  min-width: 400px;
+}
+
+.general_box .term_box{
   border-radius: 16px;
-  border-color: #0d6efd;
   border-style: solid;
   transition: all 0.1s ease;
   cursor: move;
 }
 
-.defbox .expanded_term{
+.Defbox .term_box{
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+}
+
+.Propbox .term_box{
+  background-color: #198754;
+  border-color: #198754;
+}
+
+.Justbox .term_box{
+  background-color: #0dcaf0;
+  border-color: #0dcaf0;
+}
+
+.Conbox .term_box{
+  background-color: #dc3545;
+  border-color: #dc3545;
+}
+
+.Notebox .term_box{
+  background-color: #ffc107;
+  border-color: #ffc107;
+}
+
+.general_box .expanded_term{
   border-radius: 16px 16px 0 0;
 }
 
-.defbox .row{
+.general_box .row{
   width: 100%;
   margin: 0;
 }
 
-.defbox .term_box{
+.general_box .term_box{
   max-width: 95%;
   width: fit-content;
 }
 
-.defbox .term_box .label_box{
+.general_box .term_box .label_box{
   text-align: center;
   padding: 0 5px 0 0;
 }
 
-.defbox .term_box .input_box{
+.general_box .term_box .input_box{
   text-align: left;
   padding:0;
   overflow: hidden;
   max-width: 250px;
 }
 
-.defbox .term_box .expand_box{
+.general_box .term_box .expand_box{
   text-align: center;
   padding: 0 0 0 5px;
+}
+
+.Defbox .term_box .expand_box{
   color: #fff;
 }
 
-.defbox .term_box .expand_box .btn{
+.Propbox .term_box .expand_box{
+  color: #fff;
+}
+
+.Justbox .term_box .expand_box{
+  color: #000;
+}
+
+.Conbox .term_box .expand_box{
+  color: #fff;
+}
+
+.Notebox .term_box .expand_box{
+  color: #000;
+}
+
+.general_box .term_box .expand_box .btn{
   padding: 0%;
-  background-color: #7149C6;
   transition: all 0.3s ease;
 }
 
-.defbox .term_box .term_label{
-  color: #ECF8F9;
+.Defbox .term_box .expand_box .btn{
+  background-color: #7149C6;
+}
+
+.Propbox .term_box .expand_box .btn{
+  background-color: #41644A;
+}
+
+.Justbox .term_box .expand_box .btn{
+  background-color: #79E0EE;
+}
+
+.Conbox .term_box .expand_box .btn{
+  background-color: #B70404;
+}
+
+.Notebox .term_box .expand_box .btn{
+  background-color: #FFE569;
+}
+
+.general_box .term_box .term_label{
   font-weight: bold;
   font-family: 'Times New Roman', Times, serif;
   font-size: 17;
@@ -222,45 +299,103 @@ code {
   width: fit-content;
 }
 
+.Defbox .term_box .term_label{
+  color: #ECF8F9;
+}
 
-.defbox .term_box .input_box .term_input{
+.Propbox .term_box .term_label{
+  color: #ECF8F9;
+}
+
+.Justbox .term_box .term_label{
+  color: #000;
+}
+
+.Conbox .term_box .term_label{
+  color: #ECF8F9;
+}
+
+.Notebox .term_box .term_label{
+  color: #000;
+}
+
+
+
+.general_box .term_box .input_box .term_input{
   background: transparent;
   border: none;
-  border-bottom: 1.5px solid #ECF8F9;
+  border-bottom: 1.5px solid;
   outline: none;
-  caret-color: #fff;
-  color: #fff;
   font-family: 'Times New Roman', Times, serif;
   width: 100px;
   min-width: 100px;
 }
 
-.defbox .term_box .term_input::placeholder{
+.Defbox .term_box .input_box .term_input{
+  border-bottom: #ECF8F9;
+  caret-color: #fff;
+  color: #fff;
+}
+
+.Propbox .term_box .input_box .term_input{
+  border-bottom: #ECF8F9;
+  caret-color: #fff;
+  color: #fff;
+}
+
+.Defbox .term_box .term_input::placeholder{
   color: #9DB2BF;
 }
 
-.defbox .content_box{
+.Propbox .term_box .term_input::placeholder{
+  color: #9DB2BF;
+}
+
+.general_box .content_box{
   border-radius:  0 16px 16px 16px;
-  border-color: #0d6efd;
   border-style: solid;
   overflow: hidden;
   transition: all 0.1s ease;
   cursor: move;
   resize: horizontal;
+}
+
+.Defbox .content_box{
+  border-color: #0d6efd;
   min-width: 400px;
 }
 
-.defbox .retracted_content{
+.Propbox .content_box{
+  border-color: #198754;
+  min-width: 500px;
+}
+
+.Justbox .content_box{
+  border-color: #0dcaf0;
+  min-width: 500px;
+}
+
+.Conbox .content_box{
+  border-color: #dc3545;
+  min-width: 500px;
+}
+
+.Notebox .content_box{
+  border-color: #ffc107;
+  min-width: 400px;
+}
+
+.general_box .retracted_content{
   height: 0;
   border: none;
   border-radius: 16px;
 }
 
 
-.defbox .content_box .def_textarea{
+.general_box .content_box .general_textarea{
   background: transparent;
   border: none;
-  border-bottom: 1.5px solid #0d6efd;
+  border-bottom: 1.5px solid;
   outline: none;
   width: 100%;
   margin: 0 auto;
@@ -269,9 +404,29 @@ code {
   
 }
 
+.Defbox .content_box .general_textarea{
+  border-bottom: 1.5px solid #0d6efd;
+}
+
+.Propbox .content_box .general_textarea{
+  border-bottom: 1.5px solid #198754;
+}
+
+.Justbox .content_box .general_textarea{
+  border-bottom: 1.5px solid #0dcaf0;
+}
+
+.Conbox .content_box .general_textarea{
+  border-bottom: 1.5px solid #dc3545;
+}
+
+.Notebox .content_box .general_textarea{
+  border-bottom: 1.5px solid #ffc107;
+}
+
 /* For Singlebox */
 
-.single_box{
+/* .single_box{
   border-radius: 16px;
   border-style: solid;
   transition: all 0.1s ease;
@@ -291,6 +446,7 @@ code {
 .single_box .row{
   width: 100%;
   margin: 0;
+  transition: all 0.1s ease;
 }
 
 .single_box .label_box{
@@ -302,9 +458,9 @@ code {
   margin: 0 auto;
 }
 
-/* .single_box .expand_box{
-  padding: 0%;
-} */
+.single_box .expand_box{
+  padding: 0 4px;
+}
 
 .single_box .expand_box .btn{
   padding: 0%;
@@ -326,7 +482,6 @@ code {
   font-family: 'Times New Roman', Times, serif;
   font-size: 17;
   cursor: move;
-  
 }
 
 .single_box .content_row_box{
@@ -346,9 +501,12 @@ code {
 
 .single_box .retracted_content{
   height: 0;
+  width: 0;
   border: none;
   border-radius: 16px;
+  overflow: hidden;
 }
+
 
 .single_box .content_box .single_textarea{
   background: transparent;
@@ -362,4 +520,4 @@ code {
   padding: 0 10px;
   word-wrap: break-word;
   overflow:hidden;
-}
+} */

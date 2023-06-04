@@ -48,12 +48,10 @@ function Toolbox(props) {
         />
         <Toolelement
           btnClass={"btn-outline-info"}
-          divClass={"evi"}
-          content={"Evidence"}
-          abrieviated={"Evi"}
-          tipContent={
-            "A piece of evidence used to support a proposition in the proof"
-          }
+          divClass={"just"}
+          content={"Justification"}
+          abrieviated={"Just"}
+          tipContent={"A piece of justification used to support a proposition"}
           isExpanded={isExpanded}
           clickedList={props.clickedList}
         />

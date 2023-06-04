@@ -1,12 +1,15 @@
 import React, { useState, useRef } from "react";
 import Draggable, { DraggableCore } from "react-draggable";
-import Defbox from "./Inputbox/Defbox";
+import Generalbox from "./Inputbox/Generalbox";
 import Singlebox from "./Inputbox/Singlebox";
 import { click } from "@testing-library/user-event/dist/click";
 
 function Canvas(props) {
   const [defPosList, setDefPosList] = useState([]);
   const [propPosList, setPropPosList] = useState([]);
+  const [justPosList, setJustPosList] = useState([]);
+  const [conPosList, setConPosList] = useState([]);
+  const [notePosList, setNotePosList] = useState([]);
   const canvasRef = useRef(null);
 
   function addDefPosList(newDefPos) {
@@ -17,6 +20,24 @@ function Canvas(props) {
   function addPropPosList(newPropPos) {
     setPropPosList((prevPropPos) => {
       return [...prevPropPos, newPropPos];
+    });
+  }
+
+  function addJustPosList(newJustPos) {
+    setJustPosList((prevJustPos) => {
+      return [...prevJustPos, newJustPos];
+    });
+  }
+
+  function addConPosList(newConPos) {
+    setConPosList((prevConPos) => {
+      return [...prevConPos, newConPos];
+    });
+  }
+
+  function addNotePosList(newNotePos) {
+    setNotePosList((prevNotePos) => {
+      return [...prevNotePos, newNotePos];
     });
   }
 
@@ -37,33 +58,82 @@ function Canvas(props) {
         addPropPosList(newPosition);
         props.clickedList[1](null);
         break;
-      case "evi":
-        return <span class="badge text-bg-info">Evi</span>;
+      case "just":
+        addJustPosList(newPosition);
+        props.clickedList[1](null);
+        break;
       case "con":
-        return <span class="badge text-bg-danger">Con</span>;
+        addConPosList(newPosition);
+        props.clickedList[1](null);
+        break;
       case "note":
-        return <span class="badge text-bg-warning">Note</span>;
+        addNotePosList(newPosition);
+        props.clickedList[1](null);
+        break;
       default:
         return <p>Default content</p>;
     }
   };
 
   return (
-    <Draggable cancel=".defbox .term_box, .defbox .content_box, .single_box .label_box, .single_box .expand_box, .single_box .content_box">
+    <Draggable cancel=".general_box .term_box, .general_box .content_box">
       <div className="canvas" onClick={handleOnClick} ref={canvasRef}>
         {defPosList.map((defPos, index) => {
           return (
-            <Defbox positionX={defPos.x} positionY={defPos.y} index={index} />
+            <Generalbox
+              positionX={defPos.x}
+              positionY={defPos.y}
+              index={index}
+              singleClass={"Def"}
+              fullClass={"Definition"}
+            />
           );
         })}
 
         {propPosList.map((propPos, index) => {
           return (
-            <Singlebox
+            <Generalbox
               positionX={propPos.x}
               positionY={propPos.y}
               index={index}
               singleClass={"Prop"}
+              fullClass={"Proposition"}
+            />
+          );
+        })}
+
+        {justPosList.map((propPos, index) => {
+          return (
+            <Generalbox
+              positionX={propPos.x}
+              positionY={propPos.y}
+              index={index}
+              singleClass={"Just"}
+              fullClass={"Justification"}
+            />
+          );
+        })}
+
+        {conPosList.map((propPos, index) => {
+          return (
+            <Generalbox
+              positionX={propPos.x}
+              positionY={propPos.y}
+              index={index}
+              singleClass={"Con"}
+              fullClass={"Counter Argument"}
+            />
+          );
+        })}
+
+        {notePosList.map((propPos, index) => {
+          return (
+            <Generalbox
+              positionX={propPos.x}
+              positionY={propPos.y}
+              index={index}
+              singleClass={"Note"}
+              fullClass={"Side Note"}
             />
           );
         })}
