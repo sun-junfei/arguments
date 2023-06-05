@@ -136,14 +136,14 @@ function Generalbox(props) {
   /* Delete this Box */
 
   function handleDeleteClick() {
-    props.handleDelete(props.id, props.handleList);
+    props.handleDelete(props.index, props.handleList);
   }
 
   return (
     <Draggable
       // onDrag={handleDrag}
       className="general_drag"
-      cancel=".general_box .term_box .label_box, .general_box .term_box .input_box, .general_box .term_box .expand_box .btn, .general_box .content_box .general_textarea"
+      cancel=".general_box .term_box .label_box, .general_box .term_box .input_box, .general_box .term_box .expand_box .btn, .general_box .content_box"
     >
       <div
         className={`${props.singleClass}box general_box ${

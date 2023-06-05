@@ -27,8 +27,8 @@ function Canvas(props) {
 
   function deleteList(index, setList) {
     setList((prevItems) => {
-      return prevItems.filter((item, item_index) => {
-        return item_index !== index;
+      return prevItems.filter((item) => {
+        return item.index !== index;
       });
     });
   }
@@ -41,8 +41,8 @@ function Canvas(props) {
           index: count,
           isAbled: true,
           isGranted: true,
-          initX: newPos.x,
-          initY: newPos.y,
+          X: newPos.x,
+          Y: newPos.y,
           toList: [],
           fromList: [],
         },
@@ -92,10 +92,10 @@ function Canvas(props) {
         {defList.map((def, id) => {
           return (
             <Generalbox
-              key={id}
+              key={def.index}
               id={id}
-              positionX={def.initX}
-              positionY={def.initY}
+              positionX={def.X}
+              positionY={def.Y}
               index={def.index}
               isAbled={def.isAbled}
               isGranted={def.isGranted}
@@ -103,6 +103,7 @@ function Canvas(props) {
               fullClass={"Definition"}
               handleDelete={deleteList}
               handleList={setDefList}
+              List={defList}
             />
           );
         })}
@@ -110,10 +111,10 @@ function Canvas(props) {
         {propList.map((prop, id) => {
           return (
             <Generalbox
-              key={id}
+              key={prop.index}
               id={id}
-              positionX={prop.initX}
-              positionY={prop.initY}
+              positionX={prop.X}
+              positionY={prop.Y}
               index={prop.index}
               isAbled={prop.isAbled}
               isGranted={prop.isGranted}
@@ -127,10 +128,10 @@ function Canvas(props) {
         {justList.map((just, id) => {
           return (
             <Generalbox
-              key={id}
+              key={just.index}
               id={id}
-              positionX={just.initX}
-              positionY={just.initY}
+              positionX={just.X}
+              positionY={just.Y}
               index={just.index}
               isAbled={just.isAbled}
               isGranted={just.isGranted}
@@ -145,10 +146,10 @@ function Canvas(props) {
         {conList.map((con, id) => {
           return (
             <Generalbox
-              key={id}
+              key={con.index}
               id={id}
-              positionX={con.initX}
-              positionY={con.initY}
+              positionX={con.X}
+              positionY={con.Y}
               index={con.index}
               isAbled={con.isAbled}
               isGranted={con.isGranted}
@@ -163,10 +164,10 @@ function Canvas(props) {
         {noteList.map((note, id) => {
           return (
             <Generalbox
-              key={id}
+              key={note.index}
               id={id}
-              positionX={note.initX}
-              positionY={note.initY}
+              positionX={note.X}
+              positionY={note.Y}
               index={note.index}
               isAbled={note.isAbled}
               isGranted={note.isGranted}
