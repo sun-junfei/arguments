@@ -162,6 +162,9 @@ code {
 
 /* for inputbox */
 
+.general_box{
+  z-index: 1;
+}
 
 .Defbox{
   min-width: 400px;
@@ -188,6 +191,10 @@ code {
   border-style: solid;
   transition: all 0.1s ease;
   cursor: move;
+}
+
+.general_box .term_box .label_box .btn{
+  padding: 0%;
 }
 
 .Defbox .term_box{
@@ -291,13 +298,24 @@ code {
   background-color: #FFE569;
 }
 
-.general_box .term_box .term_label{
+.general_box .term_box .term_label .btn{
   font-weight: bold;
   font-family: 'Times New Roman', Times, serif;
   font-size: 17;
-  cursor: move;
   width: fit-content;
 }
+
+.general_box .term_box .term_label .btn::after{
+  content: none;
+}
+
+.general_box .term_box .term_label .dropdown-menu{
+  position: absolute;
+  z-index: 9999;
+  font-size: 12px;
+  width: auto;
+}
+
 
 .Defbox .term_box .term_label{
   color: #ECF8F9;
@@ -319,8 +337,6 @@ code {
   color: #000;
 }
 
-
-
 .general_box .term_box .input_box .term_input{
   background: transparent;
   border: none;
@@ -332,13 +348,13 @@ code {
 }
 
 .Defbox .term_box .input_box .term_input{
-  border-bottom: #ECF8F9;
+  border-bottom: 1.5px solid #ECF8F9;
   caret-color: #fff;
   color: #fff;
 }
 
 .Propbox .term_box .input_box .term_input{
-  border-bottom: #ECF8F9;
+  border-bottom: 1.5px solid #ECF8F9;
   caret-color: #fff;
   color: #fff;
 }

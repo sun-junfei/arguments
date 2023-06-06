@@ -44,7 +44,7 @@ function Cursor(props) {
             case "note":
               return <span class="badge text-bg-warning">Note</span>;
             default:
-              return <p>Default content</p>;
+              return <p></p>;
           }
         })()}
       </span>
