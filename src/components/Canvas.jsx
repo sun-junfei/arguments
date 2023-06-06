@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useMemo } from "react";
 import Draggable, { DraggableCore } from "react-draggable";
 import Generalbox from "./Inputbox/Generalbox";
 import LeaderLine from "react-leader-line";
@@ -23,7 +23,8 @@ function Canvas(props) {
   const [noteList, setNoteList] = useState([]);
 
   const [selectState, setSelectState] = useState(null);
-  const [lineList, setLineList] = useState([]);
+
+  const lines = useRef([]);
 
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
@@ -109,7 +110,6 @@ function Canvas(props) {
       );
 
       const handleMouseMove = (event) => {
-        event.preventDefault();
         const { clientX, clientY } = event;
         setMousePosition({
           x: clientX - canvasRef.current.getBoundingClientRect().left,
@@ -126,74 +126,47 @@ function Canvas(props) {
     }
   }, [mousePosition, selectState]);
 
-  function buildLeaderLine(boxList, prefix, lines) {
-    if (boxList !== undefined) {
-      boxList.map((item) => {
-        console.log(boxList);
-        item.fromList.map((from) => {
-          lines.push(
-            new LeaderLine(
+  useEffect(() => {
+    function buildLeaderLines(boxList, prefix) {
+      const newLines = [];
+      if (boxList) {
+        boxList.forEach((item) => {
+          item.fromList.forEach((from) => {
+            const line = new LeaderLine(
               document.getElementById(from),
               document.getElementById(prefix + item.index)
-            )
-          );
+            );
+            newLines.push(line);
+          });
         });
-      });
+      }
+      return newLines;
     }
+
+    lines.current = [
+      ...buildLeaderLines(defList, "Def "),
+      ...buildLeaderLines(propList, "Prop "),
+      ...buildLeaderLines(justList, "Just "),
+      ...buildLeaderLines(conList, "Con "),
+      ...buildLeaderLines(noteList, "Note "),
+    ];
+
+    return () => {
+      lines.current.forEach((line) => line.remove());
+    };
+  }, [defList, propList, justList, conList, noteList]);
+
+  function handleCanvasDrag() {
+    lines.current.map((line) => {
+      line.position();
+    });
   }
 
-  useEffect(() => {
-    const lines = [];
-    buildLeaderLine(defList, "Def ", lines);
-    return () => {
-      lines.forEach((line) => {
-        line.remove();
-      });
-    };
-  }, [defList]);
-
-  useEffect(() => {
-    const lines = [];
-    buildLeaderLine(propList, "Prop ", lines);
-    return () => {
-      lines.forEach((line) => {
-        line.remove();
-      });
-    };
-  }, [propList]);
-
-  useEffect(() => {
-    const lines = [];
-    buildLeaderLine(justList, "Just ", lines);
-    return () => {
-      lines.forEach((line) => {
-        line.remove();
-      });
-    };
-  }, [justList]);
-
-  useEffect(() => {
-    const lines = [];
-    buildLeaderLine(conList, "Con ", lines);
-    return () => {
-      lines.forEach((line) => {
-        line.remove();
-      });
-    };
-  }, [conList]);
-
-  useEffect(() => {
-    const lines = [];
-    buildLeaderLine(noteList, "Note ", lines);
-    return () => {
-      lines.forEach((line) => {
-        line.remove();
-      });
-    };
-  }, [noteList]);
-
   return (
-    <Draggable cancel=".general_box .term_box, .general_box .content_box">
+    <Draggable
+      onDrag={handleCanvasDrag}
+      cancel=".general_box .term_box, .general_box .content_box"
+    >
       <div className="canvas" onClick={handleOnClick} ref={canvasRef}>
         <div
           id="for_seek"
@@ -205,43 +178,47 @@ function Canvas(props) {
         ></div>
         {defList.map((def, id) => {
           return (
-            <Generalbox
-              key={def.index}
-              id={`Def ${def.index}`}
-              positionX={def.X}
-              positionY={def.Y}
-              index={def.index}
-              isAbled={def.isAbled}
-              isGranted={def.isGranted}
-              singleClass={"Def"}
-              fullClass={"Definition"}
-              handleDelete={deleteList}
-              handleList={setDefList}
-              selectState={selectState}
-              setSelectState={setSelectState}
-              setLineList={setLineList}
-            />
+            <div>
+              <Generalbox
+                key={def.index}
+                id={`Def ${def.index}`}
+                positionX={def.X}
+                positionY={def.Y}
+                index={def.index}
+                isAbled={def.isAbled}
+                isGranted={def.isGranted}
+                singleClass={"Def"}
+                fullClass={"Definition"}
+                handleDelete={deleteList}
+                handleList={setDefList}
+                selectState={selectState}
+                setSelectState={setSelectState}
+                lines={lines}
+              />
+            </div>
           );
         })}
 
         {propList.map((prop, id) => {
           return (
-            <Generalbox
-              key={prop.index}
-              id={`Prop ${prop.index}`}
-              positionX={prop.X}
-              positionY={prop.Y}
-              index={prop.index}
-              isAbled={prop.isAbled}
-              isGranted={prop.isGranted}
-              singleClass={"Prop"}
-              fullClass={"Proposition"}
-              handleDelete={deleteList}
-              handleList={setPropList}
-              selectState={selectState}
-              setSelectState={setSelectState}
-              setLineList={setLineList}
-            />
+            <div>
+              <Generalbox
+                key={prop.index}
+                id={`Prop ${prop.index}`}
+                positionX={prop.X}
+                positionY={prop.Y}
+                index={prop.index}
+                isAbled={prop.isAbled}
+                isGranted={prop.isGranted}
+                singleClass={"Prop"}
+                fullClass={"Proposition"}
+                handleDelete={deleteList}
+                handleList={setPropList}
+                selectState={selectState}
+                setSelectState={setSelectState}
+                lines={lines}
+              />
+            </div>
           );
         })}
         {justList.map((just, id) => {
@@ -260,7 +237,7 @@ function Canvas(props) {
               handleList={setJustList}
               selectState={selectState}
               setSelectState={setSelectState}
-              setLineList={setLineList}
+              lines={lines}
             />
           );
         })}
@@ -281,7 +258,7 @@ function Canvas(props) {
               handleList={setConList}
               selectState={selectState}
               setSelectState={setSelectState}
-              setLineList={setLineList}
+              lines={lines}
             />
           );
         })}
@@ -302,7 +279,7 @@ function Canvas(props) {
               handleList={setNoteList}
               selectState={selectState}
               setSelectState={setSelectState}
-              setLineList={setLineList}
+              lines={lines}
             />
           );
         })}
