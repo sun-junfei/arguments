@@ -5,6 +5,7 @@ import LeaderLine from "react-leader-line";
 import Singlebox from "./Inputbox/Singlebox";
 import { click } from "@testing-library/user-event/dist/click";
 import { useEffect } from "react";
+import { hover } from "@testing-library/user-event/dist/hover";
 
 function Canvas(props) {
   const [defCount, setDefCount] = useState(1);
@@ -133,14 +134,17 @@ function Canvas(props) {
       if (boxList) {
         boxList.forEach((item) => {
           item.fromList.forEach((from) => {
+            const lineOptions = {
+              color: from.mode === "for" ? "#00DFA2" : "#FF0060",
+              size: 2.5,
+              middleLabel: from.mode === "for" ? "supports" : "against",
+            };
             const line = new LeaderLine(
               document.getElementById(from.source),
               document.getElementById(prefix + item.index),
-              {
-                color: from.mode === "for" ? "#00DFA2" : "#FF0060",
-                size: 2.5,
-              }
+              lineOptions
             );
+
             newLines.push(line);
           });
         });
