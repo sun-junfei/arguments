@@ -72,7 +72,7 @@ function Generalbox(props) {
                 isGranted: false,
                 X: prevItem[i].X,
                 Y: prevItem[i].Y,
-                fromList: [...prevItem[i].fromList, props.selectState.source],
+                fromList: [...prevItem[i].fromList, props.selectState],
               });
             } else {
               to_return.push(prevItem[i]);
@@ -160,20 +160,29 @@ function Generalbox(props) {
     >
       <div
         className={`${props.singleClass}box general_box ${
-          isExpanded ? "" : "retracted_box"
+          isExpanded ? "expanded_box" : "retracted_box"
+        } ${props.singleClass}${
+          props.selectState && props.selectState.source !== props.id
+            ? "_selected"
+            : ""
         }`}
+        id={`general_${props.id}`}
         ref={generalBoxRef}
         style={{
           position: "absolute",
           top: props.positionY,
           left: props.positionX,
         }}
+        // onMouseEnter={handleHover}
+        // onMouseLeave={handleLeave}
+        onClick={handleSelectClick}
       >
         <div class="row">
           <div
-            className={`term_box ${isExpanded ? "expanded_term" : ""} `}
+            className={`term_box ${
+              isExpanded ? "expanded_term" : "retracted_term"
+            } ${props.selectState && "selected_term"} `}
             ref={termBoxRef}
-            onClick={handleSelectClick}
             id={`${props.singleClass} ${props.index}`}
           >
             <div class="row term_row_box">
