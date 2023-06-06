@@ -42,6 +42,12 @@ function Generalbox(props) {
     });
   }
 
+  function handleBoxDrag() {
+    props.lines.current.map((line) => {
+      line.position();
+    });
+  }
+
   function handleClickFor() {
     props.setSelectState({ mode: "for", source: props.id });
   }
@@ -148,6 +154,7 @@ function Generalbox(props) {
 
   return (
     <Draggable
+      onDrag={handleBoxDrag}
       className="general_drag"
       cancel=".general_box .term_box .label_box, .general_box .term_box .input_box, .general_box .term_box .expand_box .btn, .general_box .content_box"
     >
