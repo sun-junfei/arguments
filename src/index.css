@@ -162,6 +162,10 @@ code {
 
 /* for inputbox */
 
+.general_box{
+  z-index: 1;
+}
+
 .Defbox{
   min-width: 400px;
 }
@@ -304,6 +308,14 @@ code {
 .general_box .term_box .term_label .btn::after{
   content: none;
 }
+
+.general_box .term_box .term_label .dropdown-menu{
+  position: absolute;
+  z-index: 9999;
+  font-size: 12px;
+  width: auto;
+}
+
 
 .Defbox .term_box .term_label{
   color: #ECF8F9;

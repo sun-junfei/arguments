@@ -8,11 +8,6 @@ import {
 } from "../Util";
 
 function Generalbox(props) {
-  const [toList, setToList] = useState([]);
-  const [fromList, setFromList] = useState([]);
-  const [isAbled, setIsAbled] = useState(true);
-  // const [isGranted, setIsGranted] = useState(true);
-
   const [textvalue, setTextValue] = useState("");
   const textAreaRef = useRef(null);
   const generalBoxRef = useRef(null);
@@ -38,7 +33,6 @@ function Generalbox(props) {
             isGranted: prevItem[i].isGranted ? false : true,
             X: prevItem[i].X,
             Y: prevItem[i].Y,
-            toList: prevItem[i].toList,
             fromList: prevItem[i].fromList,
           });
         }
@@ -46,6 +40,44 @@ function Generalbox(props) {
 
       return to_return;
     });
+  }
+
+  function handleClickFor() {
+    props.setSelectState({ mode: "for", source: props.id });
+  }
+
+  function handleClickAgainst() {
+    props.setSelectState({ mode: "against", source: props.id });
+  }
+
+  function handleSelectClick() {
+    if (props.selectState !== null) {
+      props.handleList((prevItem) => {
+        var to_return = [];
+
+        for (var i = 0; i < prevItem.length; i++) {
+          if (prevItem[i].index !== props.index) {
+            to_return.push(prevItem[i]);
+          } else {
+            if (!prevItem[i].fromList.includes(props.selectState.source)) {
+              to_return.push({
+                index: prevItem[i].index,
+                isAbled: prevItem[i].isAbled, // need to change
+                isGranted: false,
+                X: prevItem[i].X,
+                Y: prevItem[i].Y,
+                fromList: [...prevItem[i].fromList, props.selectState.source],
+              });
+            } else {
+              to_return.push(prevItem[i]);
+            }
+          }
+        }
+
+        return to_return;
+      });
+      props.setSelectState(null);
+    }
   }
 
   /* other states control */
@@ -85,31 +117,6 @@ function Generalbox(props) {
     "defbox"
   );
 
-  const handleDrag = (e, ui) => {
-    const { x, y } = ui;
-    props.handleList((prevItem) => {
-      var to_return = [];
-
-      for (var i = 0; i < prevItem.length; i++) {
-        if (prevItem[i].index !== props.index) {
-          to_return.push(prevItem[i]);
-        } else {
-          to_return.push({
-            index: prevItem[i].index,
-            isAbled: prevItem[i].isAbled,
-            isGranted: prevItem[i].isGranted,
-            X: x,
-            Y: y,
-            toList: prevItem[i].toList,
-            fromList: prevItem[i].fromList,
-          });
-        }
-      }
-
-      return to_return;
-    });
-  };
-
   /* determine buttonType for different boxes */
   let buttonType;
 
@@ -141,7 +148,6 @@ function Generalbox(props) {
 
   return (
     <Draggable
-      // onDrag={handleDrag}
       className="general_drag"
       cancel=".general_box .term_box .label_box, .general_box .term_box .input_box, .general_box .term_box .expand_box .btn, .general_box .content_box"
     >
@@ -160,6 +166,8 @@ function Generalbox(props) {
           <div
             className={`term_box ${isExpanded ? "expanded_term" : ""} `}
             ref={termBoxRef}
+            onClick={handleSelectClick}
+            id={`${props.singleClass} ${props.index}`}
           >
             <div class="row term_row_box">
               <div class="col-auto label_box">
@@ -173,13 +181,21 @@ function Generalbox(props) {
                     data-bs-toggle="dropdown"
                     aria-expanded="false"
                   >{`${props.singleClass} ${props.index}:`}</button>
-                  <ul class="dropdown-menu">
-                    <li>
-                      <div class="dropdown-item">For</div>
-                    </li>
-                    <li>
-                      <div class="dropdown-item">Against</div>
-                    </li>
+                  <ul class="dropdown-menu operation_menu">
+                    {props.singleClass !== "Def" && (
+                      <li>
+                        <div class="dropdown-item" onClick={handleClickFor}>
+                          For
+                        </div>
+                      </li>
+                    )}
+                    {props.singleClass !== "Def" && (
+                      <li>
+                        <div class="dropdown-item" onClick={handleClickAgainst}>
+                          Against
+                        </div>
+                      </li>
+                    )}
                     <li>
                       <div class="dropdown-item" onClick={handleGrantClick}>
                         {props.isGranted
@@ -233,6 +249,7 @@ function Generalbox(props) {
               isExpanded ? "" : "retracted_content"
             }`}
             ref={textRef}
+            onClick={handleSelectClick}
           >
             <textarea
               id="general_text"

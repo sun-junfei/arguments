@@ -4,6 +4,7 @@ import Generalbox from "./Inputbox/Generalbox";
 import LeaderLine from "react-leader-line";
 import Singlebox from "./Inputbox/Singlebox";
 import { click } from "@testing-library/user-event/dist/click";
+import { useEffect } from "react";
 
 function Canvas(props) {
   const [defCount, setDefCount] = useState(1);
@@ -21,7 +22,12 @@ function Canvas(props) {
   const [noteCount, setNoteCount] = useState(1);
   const [noteList, setNoteList] = useState([]);
 
-  const [relationList, setRelationList] = useState([]);
+  const [selectState, setSelectState] = useState(null);
+  const [lineList, setLineList] = useState([]);
+
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
+  // Function to update the mouse position
 
   const canvasRef = useRef(null);
 
@@ -43,7 +49,6 @@ function Canvas(props) {
           isGranted: true,
           X: newPos.x,
           Y: newPos.y,
-          toList: [],
           fromList: [],
         },
       ];
@@ -86,14 +91,123 @@ function Canvas(props) {
     }
   };
 
+  /* leaderline building */
+
+  useEffect(() => {
+    if (selectState !== null) {
+      const line = new LeaderLine(
+        // Start point (can be an element or coordinates)
+        document.getElementById(selectState.source),
+        // End point (initialize with initial position)
+        document.getElementById("for_seek"),
+        // Optional configuration options
+        {
+          color: selectState.mode === "for" ? "#00DFA2" : "#FF0060",
+          dash: { animation: true },
+          size: 2,
+        }
+      );
+
+      const handleMouseMove = (event) => {
+        event.preventDefault();
+        const { clientX, clientY } = event;
+        setMousePosition({
+          x: clientX - canvasRef.current.getBoundingClientRect().left,
+          y: clientY - canvasRef.current.getBoundingClientRect().top,
+        });
+      };
+
+      window.addEventListener("mousemove", handleMouseMove);
+
+      return () => {
+        window.removeEventListener("mousemove", handleMouseMove);
+        line.remove();
+      };
+    }
+  }, [mousePosition, selectState]);
+
+  function buildLeaderLine(boxList, prefix, lines) {
+    if (boxList !== undefined) {
+      boxList.map((item) => {
+        console.log(boxList);
+        item.fromList.map((from) => {
+          lines.push(
+            new LeaderLine(
+              document.getElementById(from),
+              document.getElementById(prefix + item.index)
+            )
+          );
+        });
+      });
+    }
+  }
+
+  useEffect(() => {
+    const lines = [];
+    buildLeaderLine(defList, "Def ", lines);
+    return () => {
+      lines.forEach((line) => {
+        line.remove();
+      });
+    };
+  }, [defList]);
+
+  useEffect(() => {
+    const lines = [];
+    buildLeaderLine(propList, "Prop ", lines);
+    return () => {
+      lines.forEach((line) => {
+        line.remove();
+      });
+    };
+  }, [propList]);
+
+  useEffect(() => {
+    const lines = [];
+    buildLeaderLine(justList, "Just ", lines);
+    return () => {
+      lines.forEach((line) => {
+        line.remove();
+      });
+    };
+  }, [justList]);
+
+  useEffect(() => {
+    const lines = [];
+    buildLeaderLine(conList, "Con ", lines);
+    return () => {
+      lines.forEach((line) => {
+        line.remove();
+      });
+    };
+  }, [conList]);
+
+  useEffect(() => {
+    const lines = [];
+    buildLeaderLine(noteList, "Note ", lines);
+    return () => {
+      lines.forEach((line) => {
+        line.remove();
+      });
+    };
+  }, [noteList]);
+
   return (
     <Draggable cancel=".general_box .term_box, .general_box .content_box">
       <div className="canvas" onClick={handleOnClick} ref={canvasRef}>
+        <div
+          id="for_seek"
+          style={{
+            position: "absolute",
+            left: mousePosition.x,
+            top: mousePosition.y,
+          }}
+        ></div>
         {defList.map((def, id) => {
           return (
             <Generalbox
               key={def.index}
-              id={id}
+              id={`Def ${def.index}`}
               positionX={def.X}
               positionY={def.Y}
               index={def.index}
@@ -103,7 +217,9 @@ function Canvas(props) {
               fullClass={"Definition"}
               handleDelete={deleteList}
               handleList={setDefList}
-              List={defList}
+              selectState={selectState}
+              setSelectState={setSelectState}
+              setLineList={setLineList}
             />
           );
         })}
@@ -112,7 +228,7 @@ function Canvas(props) {
           return (
             <Generalbox
               key={prop.index}
-              id={id}
+              id={`Prop ${prop.index}`}
               positionX={prop.X}
               positionY={prop.Y}
               index={prop.index}
@@ -122,6 +238,9 @@ function Canvas(props) {
               fullClass={"Proposition"}
               handleDelete={deleteList}
               handleList={setPropList}
+              selectState={selectState}
+              setSelectState={setSelectState}
+              setLineList={setLineList}
             />
           );
         })}
@@ -129,7 +248,7 @@ function Canvas(props) {
           return (
             <Generalbox
               key={just.index}
-              id={id}
+              id={`Just ${just.index}`}
               positionX={just.X}
               positionY={just.Y}
               index={just.index}
@@ -139,6 +258,9 @@ function Canvas(props) {
               fullClass={"Justification"}
               handleDelete={deleteList}
               handleList={setJustList}
+              selectState={selectState}
+              setSelectState={setSelectState}
+              setLineList={setLineList}
             />
           );
         })}
@@ -147,7 +269,7 @@ function Canvas(props) {
           return (
             <Generalbox
               key={con.index}
-              id={id}
+              id={`Con ${con.index}`}
               positionX={con.X}
               positionY={con.Y}
               index={con.index}
@@ -157,6 +279,9 @@ function Canvas(props) {
               fullClass={"Counter Argument"}
               handleDelete={deleteList}
               handleList={setConList}
+              selectState={selectState}
+              setSelectState={setSelectState}
+              setLineList={setLineList}
             />
           );
         })}
@@ -165,7 +290,7 @@ function Canvas(props) {
           return (
             <Generalbox
               key={note.index}
-              id={id}
+              id={`Note ${note.index}`}
               positionX={note.X}
               positionY={note.Y}
               index={note.index}
@@ -175,6 +300,9 @@ function Canvas(props) {
               fullClass={"Side Note"}
               handleDelete={deleteList}
               handleList={setNoteList}
+              selectState={selectState}
+              setSelectState={setSelectState}
+              setLineList={setLineList}
             />
           );
         })}
