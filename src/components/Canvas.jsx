@@ -100,6 +100,7 @@ function Canvas(props) {
         // Start point (can be an element or coordinates)
         document.getElementById(selectState.source),
         // End point (initialize with initial position)
+
         document.getElementById("for_seek"),
         // Optional configuration options
         {
@@ -133,8 +134,12 @@ function Canvas(props) {
         boxList.forEach((item) => {
           item.fromList.forEach((from) => {
             const line = new LeaderLine(
-              document.getElementById(from),
-              document.getElementById(prefix + item.index)
+              document.getElementById(from.source),
+              document.getElementById(prefix + item.index),
+              {
+                color: from.mode === "for" ? "#00DFA2" : "#FF0060",
+                size: 2.5,
+              }
             );
             newLines.push(line);
           });
