@@ -58,30 +58,40 @@ function Generalbox(props) {
 
   function handleSelectClick() {
     if (props.selectState !== null) {
-      props.handleList((prevItem) => {
-        var to_return = [];
+      var alreadyExist = false;
+      for (var i = 0; i < props.fromList.length; i++) {
+        if (props.selectState.source === props.fromList[i].source) {
+          alreadyExist = true;
+          break;
+        }
+      }
 
-        for (var i = 0; i < prevItem.length; i++) {
-          if (prevItem[i].index !== props.index) {
-            to_return.push(prevItem[i]);
-          } else {
-            if (!prevItem[i].fromList.includes(props.selectState.source)) {
-              to_return.push({
-                index: prevItem[i].index,
-                isAbled: prevItem[i].isAbled, // need to change
-                isGranted: false,
-                X: prevItem[i].X,
-                Y: prevItem[i].Y,
-                fromList: [...prevItem[i].fromList, props.selectState],
-              });
-            } else {
+      if (!alreadyExist && props.selectState.source !== props.id) {
+        props.handleList((prevItem) => {
+          var to_return = [];
+
+          for (var i = 0; i < prevItem.length; i++) {
+            if (prevItem[i].index !== props.index) {
               to_return.push(prevItem[i]);
+            } else {
+              if (!prevItem[i].fromList.includes(props.selectState.source)) {
+                to_return.push({
+                  index: prevItem[i].index,
+                  isAbled: prevItem[i].isAbled, // need to change
+                  isGranted: false,
+                  X: prevItem[i].X,
+                  Y: prevItem[i].Y,
+                  fromList: [...prevItem[i].fromList, props.selectState],
+                });
+              } else {
+                to_return.push(prevItem[i]);
+              }
             }
           }
-        }
 
-        return to_return;
-      });
+          return to_return;
+        });
+      }
       props.setSelectState(null);
     }
   }
@@ -156,14 +166,22 @@ function Generalbox(props) {
     <Draggable
       onDrag={handleBoxDrag}
       className="general_drag"
-      cancel=".general_box .term_box .label_box, .general_box .term_box .input_box, .general_box .term_box .expand_box .btn, .general_box .content_box"
+      cancel={`.general_box .term_box .label_box, .general_box .term_box .input_box, .general_box .term_box .expand_box .btn, .general_box .content_box${
+        props.selectState && ", .general_box .term_box"
+      }`}
     >
       <div
         className={`${props.singleClass}box general_box ${
           isExpanded ? "expanded_box" : "retracted_box"
-        } ${props.singleClass}${
-          props.selectState && props.selectState.source !== props.id
-            ? "_selected"
+        } ${props.selectState !== null ? "selected_" : ""}${props.singleClass}${
+          props.selectState !== null &&
+          props.selectState.source !== props.id &&
+          ![
+            ...props.fromList.map((from) => {
+              return from.source;
+            }),
+          ].includes(props.selectState.source)
+            ? "_selectable"
             : ""
         }`}
         id={`general_${props.id}`}
@@ -173,15 +191,22 @@ function Generalbox(props) {
           top: props.positionY,
           left: props.positionX,
         }}
-        // onMouseEnter={handleHover}
-        // onMouseLeave={handleLeave}
         onClick={handleSelectClick}
       >
         <div class="row">
           <div
             className={`term_box ${
               isExpanded ? "expanded_term" : "retracted_term"
-            } ${props.selectState && "selected_term"} `}
+            } ${
+              props.selectState &&
+              props.selectState.source !== props.id &&
+              ![
+                ...props.fromList.map((from) => {
+                  return from.source;
+                }),
+              ].includes(props.selectState.source) &&
+              "selected_term"
+            } `}
             ref={termBoxRef}
             id={`${props.singleClass} ${props.index}`}
           >
@@ -196,6 +221,7 @@ function Generalbox(props) {
                     class={`btn btn-${buttonType} dropdown-toggle`}
                     data-bs-toggle="dropdown"
                     aria-expanded="false"
+                    disabled={props.selectState !== null}
                   >{`${props.singleClass} ${props.index}:`}</button>
                   <ul class="dropdown-menu operation_menu">
                     {props.singleClass !== "Def" && (
@@ -247,6 +273,7 @@ function Generalbox(props) {
                   type="button"
                   class={`btn btn-${buttonType}`}
                   onClick={handleOnClick}
+                  disabled={props.selectState !== null}
                 >
                   {isExpanded ? (
                     <i class="bx bx-collapse-vertical"></i>

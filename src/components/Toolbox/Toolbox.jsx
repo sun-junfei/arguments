@@ -15,11 +15,27 @@ function Toolbox(props) {
     }
   }
 
+  function handleToolBoxClick() {
+    if (props.selectState !== null) {
+      props.setSelectState(null);
+    }
+  }
+
   return (
-    <div className={`toolbox_sidebar ${isExpanded ? "expanded" : ""}`}>
+    <div
+      className={`toolbox_sidebar ${isExpanded ? "expanded" : ""} ${
+        props.selectState ? "selected_toolbox" : ""
+      }`}
+      onClick={handleToolBoxClick}
+    >
       <div class="logo_content">
         <div class="logo">
-          <button type="button" class="btn btn-dark" onClick={handleOnClick}>
+          <button
+            type="button"
+            class="btn btn-dark"
+            onClick={handleOnClick}
+            disabled={props.selectState !== null}
+          >
             <i class="bx bx-menu"></i>
           </button>
           {isExpanded && <div class="logo_name">Add Components</div>}
@@ -34,6 +50,7 @@ function Toolbox(props) {
           tipContent={"Used to make a definition for a specific term"}
           isExpanded={isExpanded}
           clickedList={props.clickedList}
+          selectState={props.selectState}
         />
         <Toolelement
           btnClass={"btn-outline-success"}
@@ -45,6 +62,7 @@ function Toolbox(props) {
           }
           isExpanded={isExpanded}
           clickedList={props.clickedList}
+          selectState={props.selectState}
         />
         <Toolelement
           btnClass={"btn-outline-info"}
@@ -54,6 +72,7 @@ function Toolbox(props) {
           tipContent={"A piece of justification used to support a proposition"}
           isExpanded={isExpanded}
           clickedList={props.clickedList}
+          selectState={props.selectState}
         />
         <Toolelement
           btnClass={"btn-outline-danger"}
@@ -65,6 +84,7 @@ function Toolbox(props) {
           }
           isExpanded={isExpanded}
           clickedList={props.clickedList}
+          selectState={props.selectState}
         />
         <Toolelement
           btnClass={"btn-outline-warning"}
@@ -76,6 +96,7 @@ function Toolbox(props) {
           }
           isExpanded={isExpanded}
           clickedList={props.clickedList}
+          selectState={props.selectState}
         />
       </ul>
     </div>
