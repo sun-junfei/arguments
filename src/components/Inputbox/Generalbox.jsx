@@ -50,10 +50,14 @@ function Generalbox(props) {
   }
 
   function handleClickFor() {
+    var button = document.getElementById(props.id + "button");
+    button.click();
     props.setSelectState({ mode: "for", source: props.id });
   }
 
   function handleClickAgainst() {
+    var button = document.getElementById(props.id + "button");
+    button.click();
     props.setSelectState({ mode: "against", source: props.id });
   }
 
