@@ -21,7 +21,19 @@ code {
   cursor: none;
 }
 
+.selected_workspace{
+  cursor: not-allowed;
+}
+
+/* for canvas*/
+.canvas_selected{
+  cursor: not-allowed;
+}
+
 /* for Toolbox */
+.selected_toolbox{
+  cursor: not-allowed;
+}
 
 .toolbox_sidebar{
   position:fixed;
@@ -169,7 +181,9 @@ code {
   border-radius: 16px;
 }
 
-.Def_selected.expanded_box:hover{
+
+
+.selected_Def_selectable.expanded_box:hover{
   box-shadow: rgba(13,110,253, 0.4) 0 2px 0 5px, rgba(13,110,253, 0.3) -10px 10px, rgba(13,110,253, 0.2) -15px 15px, rgba(13,110,253, 0.1) -20px 20px, rgba(13,110,253, 0.05) -25px 25px;
 }
 
@@ -177,11 +191,15 @@ code {
   box-shadow: rgba(13,110,253, 0.4) -5px 5px, rgba(13,110,253, 0.3) -10px 10px, rgba(13,110,253, 0.2) -15px 15px, rgba(13,110,253, 0.1) -20px 20px, rgba(13,110,253, 0.05) -25px 25px;
 }
 
+.selected_Def:hover{
+  cursor: not-allowed;
+}
+
 .Defbox{
   min-width: 400px;
 }
 
-.Prop_selected.expanded_box:hover{
+.selected_Prop_selectable.expanded_box:hover{
   box-shadow: rgba(25,135,84, 0.4) 0 2px 0 5px, rgba(25,135,84, 0.3) -10px 10px, rgba(25,135,84, 0.2) -15px 15px, rgba(25,135,84, 0.1) -20px 20px, rgba(25,135,84, 0.05) -25px 25px;
 }
 
@@ -189,11 +207,15 @@ code {
   box-shadow: rgba(25,135,84, 0.4) -5px 5px, rgba(25,135,84, 0.3) -10px 10px, rgba(25,135,84, 0.2) -15px 15px, rgba(25,135,84, 0.1) -20px 20px, rgba(25,135,84, 0.05) -25px 25px;
 }
 
+.selected_Prop:hover{
+  cursor: not-allowed !important;
+}
+
 .Propbox{
   min-width: 500px;
 }
 
-.Just_selected.expanded_box:hover{
+.selected_Just_selectable.expanded_box:hover{
   box-shadow: rgba(13,202,240, 0.4) 0 2px 0 5px, rgba(13,202,240, 0.3) -10px 10px, rgba(13,202,240, 0.2) -15px 15px, rgba(13,202,240, 0.1) -20px 20px, rgba(13,202,240, 0.05) -25px 25px;
 }
 
@@ -205,7 +227,7 @@ code {
   min-width: 500px;
 }
 
-.Con_selected.expanded_box:hover{
+.selected_Con_selectable.expanded_box:hover{
   box-shadow: rgba(220,53,69, 0.4) 0 2px 0 5px, rgba(220,53,69, 0.3) -10px 10px, rgba(220,53,69, 0.2) -15px 15px, rgba(220,53,69, 0.1) -20px 20px, rgba(220,53,69, 0.05) -25px 25px;
 }
 
@@ -217,7 +239,7 @@ code {
   min-width: 500px;
 }
 
-.Note_selected.expanded_box:hover{
+.selected_Note_selectable.expanded_box:hover{
   box-shadow: rgba(255,193,7, 0.4) 0 2px 0 5px, rgba(255,193,7, 0.3) -10px 10px, rgba(255,193,7, 0.2) -15px 15px, rgba(255,193,7, 0.1) -20px 20px, rgba(255,193,7, 0.05) -25px 25px;
 }
 
@@ -416,7 +438,6 @@ code {
   border-style: solid;
   overflow: hidden;
   transition: all 0.1s ease;
-  cursor: move;
   resize: horizontal;
 }
 

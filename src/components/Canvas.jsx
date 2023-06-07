@@ -23,8 +23,6 @@ function Canvas(props) {
   const [noteCount, setNoteCount] = useState(1);
   const [noteList, setNoteList] = useState([]);
 
-  const [selectState, setSelectState] = useState(null);
-
   const lines = useRef([]);
 
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -60,6 +58,13 @@ function Canvas(props) {
   }
 
   const handleOnClick = (event) => {
+    /* in selectState, set the selectState to null */
+    if (props.selectState !== null) {
+      props.setSelectState(null);
+      return;
+    }
+
+    /* create new box */
     const canvasRect = canvasRef.current.getBoundingClientRect();
     /* the numerical values corresponds to half of the badge width and height */
     const posX = event.clientX - canvasRect.left - 41.328;
@@ -96,16 +101,16 @@ function Canvas(props) {
   /* leaderline building */
 
   useEffect(() => {
-    if (selectState !== null) {
+    if (props.selectState !== null) {
       const line = new LeaderLine(
         // Start point (can be an element or coordinates)
-        document.getElementById(selectState.source),
+        document.getElementById(props.selectState.source),
         // End point (initialize with initial position)
 
         document.getElementById("for_seek"),
         // Optional configuration options
         {
-          color: selectState.mode === "for" ? "#00DFA2" : "#FF0060",
+          color: props.selectState.mode === "for" ? "#00DFA2" : "#FF0060",
           dash: { animation: true },
           size: 2,
         }
@@ -126,7 +131,7 @@ function Canvas(props) {
         line.remove();
       };
     }
-  }, [mousePosition, selectState]);
+  }, [mousePosition, props.selectState]);
 
   useEffect(() => {
     function buildLeaderLines(boxList, prefix) {
@@ -174,9 +179,15 @@ function Canvas(props) {
   return (
     <Draggable
       onDrag={handleCanvasDrag}
-      cancel=".general_box .term_box, .general_box .content_box"
+      cancel={
+        ".general_box .term_box, .general_box .content_box, .canvas_selected"
+      }
     >
-      <div className="canvas" onClick={handleOnClick} ref={canvasRef}>
+      <div
+        className={`canvas ${props.selectState && "canvas_selected"}`}
+        onClick={handleOnClick}
+        ref={canvasRef}
+      >
         <div
           id="for_seek"
           style={{
@@ -187,47 +198,45 @@ function Canvas(props) {
         ></div>
         {defList.map((def, id) => {
           return (
-            <div>
-              <Generalbox
-                key={def.index}
-                id={`Def ${def.index}`}
-                positionX={def.X}
-                positionY={def.Y}
-                index={def.index}
-                isAbled={def.isAbled}
-                isGranted={def.isGranted}
-                singleClass={"Def"}
-                fullClass={"Definition"}
-                handleDelete={deleteList}
-                handleList={setDefList}
-                selectState={selectState}
-                setSelectState={setSelectState}
-                lines={lines}
-              />
-            </div>
+            <Generalbox
+              key={def.index}
+              id={`Def ${def.index}`}
+              positionX={def.X}
+              positionY={def.Y}
+              index={def.index}
+              isAbled={def.isAbled}
+              isGranted={def.isGranted}
+              fromList={def.fromList}
+              singleClass={"Def"}
+              fullClass={"Definition"}
+              handleDelete={deleteList}
+              handleList={setDefList}
+              selectState={props.selectState}
+              setSelectState={props.setSelectState}
+              lines={lines}
+            />
           );
         })}
 
         {propList.map((prop, id) => {
           return (
-            <div>
-              <Generalbox
-                key={prop.index}
-                id={`Prop ${prop.index}`}
-                positionX={prop.X}
-                positionY={prop.Y}
-                index={prop.index}
-                isAbled={prop.isAbled}
-                isGranted={prop.isGranted}
-                singleClass={"Prop"}
-                fullClass={"Proposition"}
-                handleDelete={deleteList}
-                handleList={setPropList}
-                selectState={selectState}
-                setSelectState={setSelectState}
-                lines={lines}
-              />
-            </div>
+            <Generalbox
+              key={prop.index}
+              id={`Prop ${prop.index}`}
+              positionX={prop.X}
+              positionY={prop.Y}
+              index={prop.index}
+              isAbled={prop.isAbled}
+              isGranted={prop.isGranted}
+              fromList={prop.fromList}
+              singleClass={"Prop"}
+              fullClass={"Proposition"}
+              handleDelete={deleteList}
+              handleList={setPropList}
+              selectState={props.selectState}
+              setSelectState={props.setSelectState}
+              lines={lines}
+            />
           );
         })}
         {justList.map((just, id) => {
@@ -240,12 +249,13 @@ function Canvas(props) {
               index={just.index}
               isAbled={just.isAbled}
               isGranted={just.isGranted}
+              fromList={just.fromList}
               singleClass={"Just"}
               fullClass={"Justification"}
               handleDelete={deleteList}
               handleList={setJustList}
-              selectState={selectState}
-              setSelectState={setSelectState}
+              selectState={props.selectState}
+              setSelectState={props.setSelectState}
               lines={lines}
             />
           );
@@ -261,12 +271,13 @@ function Canvas(props) {
               index={con.index}
               isAbled={con.isAbled}
               isGranted={con.isGranted}
+              fromList={con.fromList}
               singleClass={"Con"}
               fullClass={"Counter Argument"}
               handleDelete={deleteList}
               handleList={setConList}
-              selectState={selectState}
-              setSelectState={setSelectState}
+              selectState={props.selectState}
+              setSelectState={props.setSelectState}
               lines={lines}
             />
           );
@@ -282,12 +293,13 @@ function Canvas(props) {
               index={note.index}
               isAbled={note.isAbled}
               isGranted={note.isGranted}
+              fromList={note.fromList}
               singleClass={"Note"}
               fullClass={"Side Note"}
               handleDelete={deleteList}
               handleList={setNoteList}
-              selectState={selectState}
-              setSelectState={setSelectState}
+              selectState={props.selectState}
+              setSelectState={props.setSelectState}
               lines={lines}
             />
           );
