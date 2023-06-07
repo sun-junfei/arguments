@@ -13,6 +13,7 @@ function Generalbox(props) {
   const generalBoxRef = useRef(null);
   const inputRef = useRef(null);
   const termBoxRef = useRef(null);
+  const dropdownRef = useRef(null);
   const textRef = useRef(null);
   const [inputvalue, setInputValue] = useState("");
 
@@ -166,14 +167,14 @@ function Generalbox(props) {
     <Draggable
       onDrag={handleBoxDrag}
       className="general_drag"
-      cancel={`.general_box .term_box .label_box, .general_box .term_box .input_box, .general_box .term_box .expand_box .btn, .general_box .content_box${
-        props.selectState && ", .general_box .term_box"
+      cancel={`.general_box .term_box .label_box, .general_box .term_box .input_box, .general_box .term_box .expand_box .btn, .general_box .content_box, ${
+        props.selectState && ".general_box .term_box"
       }`}
     >
       <div
         className={`${props.singleClass}box general_box ${
           isExpanded ? "expanded_box" : "retracted_box"
-        } ${props.selectState !== null ? "selected_" : ""}${props.singleClass}${
+        } ${props.selectState !== null ? "selected_box" : ""}${
           props.selectState !== null &&
           props.selectState.source !== props.id &&
           ![
@@ -217,11 +218,13 @@ function Generalbox(props) {
                   for={props.index + "_term_input"}
                 >
                   <button
+                    id={props.id + "button"}
                     type="button"
                     class={`btn btn-${buttonType} dropdown-toggle`}
                     data-bs-toggle="dropdown"
                     aria-expanded="false"
                     disabled={props.selectState !== null}
+                    ref={dropdownRef}
                   >{`${props.singleClass} ${props.index}:`}</button>
                   <ul class="dropdown-menu operation_menu">
                     {props.singleClass !== "Def" && (
@@ -296,12 +299,15 @@ function Generalbox(props) {
           >
             <textarea
               id="general_text"
-              className={`general_textarea ${props.singleClass}_textarea`}
+              className={`general_textarea ${props.singleClass}_textarea ${
+                props.selectState && "selected_textarea"
+              }`}
               onChange={handleTextChange}
               ref={textAreaRef}
               placeholder={`Enter the ${props.fullClass}`}
               rows={1}
               value={textvalue}
+              disabled={props.selectState}
             />
           </div>
         </div>
