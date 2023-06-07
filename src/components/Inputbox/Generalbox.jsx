@@ -49,13 +49,15 @@ function Generalbox(props) {
     });
   }
 
-  function handleClickFor() {
+  function handleClickFor(event) {
+    event.preventDefault(); // stop the auto jump of the cursor
     var button = document.getElementById(props.id + "button");
     button.click();
     props.setSelectState({ mode: "for", source: props.id });
   }
 
-  function handleClickAgainst() {
+  function handleClickAgainst(event) {
+    event.preventDefault(); // stop the auto jump of the cursor
     var button = document.getElementById(props.id + "button");
     button.click();
     props.setSelectState({ mode: "against", source: props.id });
