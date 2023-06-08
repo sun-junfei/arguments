@@ -180,7 +180,7 @@ function Canvas(props) {
     <Draggable
       onDrag={handleCanvasDrag}
       cancel={
-        ".general_box .term_box, .general_box .content_box, .canvas_selected"
+        ".general_box .term_box, .general_box .content_box, .canvas_selected, .general_box .disabled_cover"
       }
     >
       <div
