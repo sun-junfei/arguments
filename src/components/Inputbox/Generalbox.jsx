@@ -190,7 +190,7 @@ function Generalbox(props) {
           ].includes(props.selectState.source)
             ? "_selectable"
             : ""
-        }`}
+        } ${!props.isAbled && "disabled_box"}`}
         id={`general_${props.id}`}
         ref={generalBoxRef}
         style={{
@@ -219,6 +219,11 @@ function Generalbox(props) {
           >
             <div class="row term_row_box">
               <div class="col-auto label_box">
+                {!props.isAbled && (
+                  <span class="badge rounded-pill text-bg-danger not_justified">
+                    not justified
+                  </span>
+                )}
                 <label
                   className="term_label btn-group dropup"
                   for={props.index + "_term_input"}

@@ -56,7 +56,6 @@ code {
   display: flex;
   height: 50px;
   padding-left: 17.5px;
-
   width: 100%;
   align-items: center;
 }
@@ -65,8 +64,6 @@ code {
   height:37px;
   width:33px;
   display: flex;
-  
-  
   align-items: center;
   padding: 0;
 }
@@ -94,7 +91,6 @@ code {
   list-style: none;
   text-align: center;
   font-family: 'Wix Madefor Display', sans-serif;
-  
 }
 
 
@@ -180,8 +176,6 @@ code {
   transition: box-shadow 0.1s ease-in-out;
   border-radius: 16px;
 }
-
-
 
 .Defbox.selected_box_selectable.expanded_box:hover{
   box-shadow: rgba(13,110,253, 0.4) 0 2px 0 5px, rgba(13,110,253, 0.3) -10px 10px, rgba(13,110,253, 0.2) -15px 15px, rgba(13,110,253, 0.1) -20px 20px, rgba(13,110,253, 0.05) -25px 25px;
@@ -305,9 +299,29 @@ code {
   border-color: #0d6efd;
 }
 
+.Defbox.disabled_box .term_box{
+  background-color: #606060;
+  border-color: #606060;
+}
+
+.Defbox.disabled_box .term_box .btn{
+  background-color: #606060;
+  border-color: #606060;
+}
+
 .Propbox .term_box{
   background-color: #198754;
   border-color: #198754;
+}
+
+.Propbox.disabled_box .term_box{
+  background-color: #606060;
+  border-color: #606060;
+}
+
+.Propbox.disabled_box .term_box .btn{
+  background-color: #606060;
+  border-color: #606060;
 }
 
 .Justbox .term_box{
@@ -315,14 +329,44 @@ code {
   border-color: #0dcaf0;
 }
 
+.Justbox.disabled_box .term_box{
+  background-color: #959595;
+  border-color: #959595;
+}
+
+.Justbox.disabled_box .term_box .btn{
+  background-color: #959595;
+  border-color: #959595;
+}
+
 .Conbox .term_box{
   background-color: #dc3545;
   border-color: #dc3545;
 }
 
+.Conbox.disabled_box .term_box{
+  background-color: #686868;
+  border-color: #686868;
+}
+
+.Conbox.disabled_box .term_box .btn{
+  background-color: #686868;
+  border-color: #686868;
+}
+
 .Notebox .term_box{
   background-color: #ffc107;
   border-color: #ffc107;
+}
+
+.Notebox.disabled_box .term_box{
+  background-color: #BFBFBF;
+  border-color: #BFBFBF;
+}
+
+.Notebox.disabled_box .term_box .btn{
+  background-color: #BFBFBF;
+  border-color: #BFBFBF;
 }
 
 .general_box .expanded_term{
@@ -349,6 +393,14 @@ code {
   padding:0;
   overflow: hidden;
   max-width: 250px;
+}
+
+.general_box.disabled_box .term_box .input_box{
+  max-width: 190px;
+}
+
+.general_box .not_justified{
+  cursor: default;
 }
 
 .general_box .term_box .expand_box{
@@ -385,20 +437,40 @@ code {
   background-color: #7149C6;
 }
 
+.Defbox.disabled_box .term_box .expand_box .btn{
+  background-color: #626262;
+}
+
 .Propbox .term_box .expand_box .btn{
   background-color: #41644A;
+}
+
+.Propbox.disabled_box .term_box .expand_box .btn{
+  background-color: #565656;
 }
 
 .Justbox .term_box .expand_box .btn{
   background-color: #79E0EE;
 }
 
+.Justbox.disabled_box .term_box .expand_box .btn{
+  background-color: #C2C2C2;
+}
+
 .Conbox .term_box .expand_box .btn{
   background-color: #B70404;
 }
 
+.Conbox.disabled_box .term_box .expand_box .btn{
+  background-color: #393939;
+}
+
 .Notebox .term_box .expand_box .btn{
   background-color: #FFE569;
+}
+
+.Notebox.disabled_box .term_box .expand_box .btn{
+  background-color: #DFDFDF;
 }
 
 .general_box .term_box .term_label .btn{
@@ -418,8 +490,6 @@ code {
   font-size: 12px;
   width: auto;
 }
-
-
 
 .Defbox .term_box .term_label{
   color: #ECF8F9;
@@ -484,9 +554,17 @@ code {
   min-width: 400px;
 }
 
+.Defbox.disabled_box .content_box{
+  border-color: #606060;
+}
+
 .Propbox .content_box{
   border-color: #198754;
   min-width: 500px;
+}
+
+.Propbox.disabled_box .content_box{
+  border-color: #606060;
 }
 
 .Justbox .content_box{
@@ -494,14 +572,26 @@ code {
   min-width: 500px;
 }
 
+.Justbox.disabled_box .content_box{
+  border-color: #959595;
+}
+
 .Conbox .content_box{
   border-color: #dc3545;
   min-width: 500px;
 }
 
+.Conbox.disabled_box .content_box{
+  border-color: #686868;
+}
+
 .Notebox .content_box{
   border-color: #ffc107;
   min-width: 400px;
+}
+
+.Notebox.disabled_box .content_box{
+  border-color: #BFBFBF;
 }
 
 .general_box .retracted_content{
@@ -527,20 +617,40 @@ code {
   border-bottom: 1.5px solid #0d6efd;
 }
 
+.Defbox.disabled_box .content_box .general_textarea{
+  border-bottom: 1.5px solid #606060;
+}
+
 .Propbox .content_box .general_textarea{
   border-bottom: 1.5px solid #198754;
+}
+
+.Propbox.disabled_box .content_box .general_textarea{
+  border-bottom: 1.5px solid #606060;
 }
 
 .Justbox .content_box .general_textarea{
   border-bottom: 1.5px solid #0dcaf0;
 }
 
+.Justbox.disabled_box .content_box .general_textarea{
+  border-bottom: 1.5px solid #959595;
+}
+
 .Conbox .content_box .general_textarea{
   border-bottom: 1.5px solid #dc3545;
 }
 
+.Conbox.disabled_box .content_box .general_textarea{
+  border-bottom: 1.5px solid #686868;
+}
+
 .Notebox .content_box .general_textarea{
   border-bottom: 1.5px solid #ffc107;
+}
+
+.Notebox.disabled_box .content_box .general_textarea{
+  border-bottom: 1.5px solid #BFBFBF;
 }
 
 /* For Singlebox */
