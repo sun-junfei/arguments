@@ -10,7 +10,7 @@ const Linemenu = (props) => {
     return {
       index: item.index,
       isAbled: item.isAbled, // need to change
-      isGranted: item.isGranted ? false : true,
+      isGranted: item.isGranted,
       X: item.X,
       Y: item.Y,
       fromList: item.fromList.map((from) => {
@@ -33,7 +33,7 @@ const Linemenu = (props) => {
     return {
       index: item.index,
       isAbled: item.isAbled, // need to change
-      isGranted: item.isGranted ? false : true,
+      isGranted: item.isGranted,
       X: item.X,
       Y: item.Y,
       fromList: item.fromList.map((from) => {

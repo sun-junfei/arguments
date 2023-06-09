@@ -1,4 +1,5 @@
 import React, { useState, useRef, useMemo } from "react";
+import ReactDOM from "react-dom";
 import Draggable, { DraggableCore } from "react-draggable";
 import Generalbox from "./Inputbox/Generalbox";
 import LeaderLine from "react-leader-line";
@@ -25,6 +26,7 @@ function Canvas(props) {
   const [noteList, setNoteList] = useState([]);
 
   const lines = useRef([]);
+  const midPointBoxes = useRef([]);
   const lineSelectionRef = useRef(props.lineSelection);
 
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -137,62 +139,103 @@ function Canvas(props) {
     }
   }, [mousePosition, props.selectState]);
 
+  const parseLineMidpoint = (pathData) => {
+    const coordinates = pathData.match(/[\d.-]+/g); // Extract all numeric coordinates from the path data
+
+    const startX = parseFloat(coordinates[0]);
+    const startY = parseFloat(coordinates[1]);
+    const endX = parseFloat(coordinates[6]);
+    const endY = parseFloat(coordinates[7]);
+
+    const xMid = (startX + endX) / 2; // Calculate the midpoint X coordinate
+    const yMid = (startY + endY) / 2; // Calculate the midpoint Y coordinate
+
+    return { x: xMid, y: yMid };
+  };
+
+  function drawLine(from, newLines, prefix, target, setBoxList) {
+    const lineOptions = {
+      color: from.mode === "for" ? "#00DFA2" : "#FF0060",
+      size: from.isSufficient ? 6 : 4,
+      middleLabel: from.mode === "for" ? "supports" : "against",
+      startLabel: LeaderLine.pathLabel(from.isSufficient ? "(sufficient)" : ""),
+      outline:
+        props.lineSelection !== null &&
+        props.lineSelection.source === from.source &&
+        props.lineSelection.to === target,
+      outlineColor: "#2ca4fa",
+      outlineSize: 0.5,
+      endPlugOutline:
+        props.lineSelection !== null &&
+        props.lineSelection.source === from.source &&
+        props.lineSelection.to === target,
+    };
+    var line = new LeaderLine(
+      document.getElementById(from.source),
+      document.getElementById(target),
+      lineOptions
+    );
+
+    const midPoint = parseLineMidpoint(
+      document
+        .querySelector("body>.leader-line:last-child .leader-line-line-path")
+        .getAttribute("d")
+    );
+
+    console.log(midPoint);
+
+    const newElement = document.createElement("div");
+    newElement.style.position = "fixed";
+    newElement.style.top = midPoint.y + "px";
+    newElement.style.left = midPoint.x + "px";
+
+    midPointBoxes.current = [...midPointBoxes.current, newElement];
+
+    document
+      .querySelector(".leader-line:last-of-type")
+      .addEventListener("click", function () {
+        props.setLineSelection({
+          source: from.source,
+          to: target,
+          setList: setBoxList,
+          prefix: prefix,
+        });
+        if (props.selectState !== null) {
+          handleLineSelectClick(line, lineSelectionRef.current);
+        }
+      });
+
+    document
+      .querySelector(".leader-line:last-of-type")
+      .addEventListener("contextmenu", function (event) {
+        handleLineMenu(event);
+        props.setLineSelection({
+          source: from.source,
+          to: target,
+          setList: setBoxList,
+          prefix: prefix,
+          mode: from.mode,
+          isSufficient: from.isSufficient,
+        });
+      });
+
+    newLines.push(line);
+  }
+
+  function drawToLines(lastFrom, newLines, prefix, setBoxList) {
+    lastFrom.fromList.forEach((from) => {
+      // drawLine(from, newLines, prefix, , setBoxList);
+    });
+  }
+
   useEffect(() => {
     function buildLeaderLines(boxList, setBoxList, prefix) {
       const newLines = [];
       if (boxList) {
         boxList.forEach((item) => {
           item.fromList.forEach((from) => {
-            const lineOptions = {
-              color: from.mode === "for" ? "#00DFA2" : "#FF0060",
-              size: from.isSufficient ? 6 : 4,
-              middleLabel: from.mode === "for" ? "supports" : "against",
-              startLabel: LeaderLine.pathLabel(
-                from.isSufficient ? "(sufficient)" : ""
-              ),
-              outline:
-                props.lineSelection !== null &&
-                props.lineSelection.source === from.source &&
-                props.lineSelection.to === prefix + item.index,
-              outlineColor: "#2ca4fa",
-              outlineSize: 0.5,
-              endPlugOutline:
-                props.lineSelection !== null &&
-                props.lineSelection.source === from.source &&
-                props.lineSelection.to === prefix + item.index,
-            };
-            var line = new LeaderLine(
-              document.getElementById(from.source),
-              document.getElementById(prefix + item.index),
-              lineOptions
-            );
-
-            document
-              .querySelector(".leader-line:last-of-type")
-              .addEventListener("click", function () {
-                props.setLineSelection({
-                  source: from.source,
-                  to: prefix + item.index,
-                  setList: setBoxList,
-                  prefix: prefix,
-                });
-              });
-
-            document
-              .querySelector(".leader-line:last-of-type")
-              .addEventListener("contextmenu", function (event) {
-                handleLineMenu(event);
-                props.setLineSelection({
-                  source: from.source,
-                  to: prefix + item.index,
-                  setList: setBoxList,
-                  prefix: prefix,
-                  mode: from.mode,
-                  isSufficient: from.isSufficient,
-                });
-              });
-
-            newLines.push(line);
+            drawLine(from, newLines, prefix, prefix + item.index, setBoxList);
+            //
           });
         });
       }
@@ -207,17 +250,53 @@ function Canvas(props) {
       ...buildLeaderLines(noteList, setNoteList, "Note "),
     ];
 
-    console.log(props.lineSelection);
+    midPointBoxes.current.forEach((box) => {
+      document
+        .getElementById("canvas")
+        .insertBefore(box, document.getElementById("for_seek"));
+    });
 
     return () => {
       lines.current.forEach((line) => line.remove());
+      midPointBoxes.current.forEach((box) => {
+        box.parentNode.removeChild(box);
+      });
+      midPointBoxes.current = [];
     };
   }, [defList, propList, justList, conList, noteList, props.lineSelection]);
+
+  /* in the selectState and selecting a line */
+  function addToLine(lineSelection, item) {
+    return {
+      index: item.index,
+      isAbled: item.isAbled, // need to change
+      isGranted: item.isGranted,
+      X: item.X,
+      Y: item.Y,
+      fromList: item.fromList.map((from) => {
+        if (from.source === lineSelection.source) {
+          return {
+            source: from.source,
+            mode: from.mode,
+            isSufficient: from.isSufficient,
+            fromList: [...from.fromList, props.selectState],
+          };
+        } else {
+          return from;
+        }
+      }),
+    };
+  }
+
+  function handleLineSelectClick(lineSelection) {
+    updateLine(lineSelection, addToLine);
+  }
 
   function handleCanvasDrag() {
     lines.current.map((line) => {
       line.position();
     });
+    midPointBoxes.current.forEach((box) => {});
   }
 
   const handleLineMenu = (event) => {
@@ -257,7 +336,7 @@ function Canvas(props) {
     return {
       index: item.index,
       isAbled: item.isAbled, // need to change
-      isGranted: item.isGranted ? false : true,
+      isGranted: item.isGranted,
       X: item.X,
       Y: item.Y,
       fromList: item.fromList.filter(
@@ -284,6 +363,7 @@ function Canvas(props) {
         className={`canvas ${props.selectState && "canvas_selected"}`}
         onClick={handleOnClick}
         ref={canvasRef}
+        id={"canvas"}
       >
         {props.menuVisible && (
           <Linemenu
