@@ -53,14 +53,18 @@ function Generalbox(props) {
     event.preventDefault(); // stop the auto jump of the cursor
     var button = document.getElementById(props.id + "button");
     button.click();
-    props.setSelectState({ mode: "for", source: props.id });
+    props.setSelectState({ mode: "for", source: props.id, isSufficient: true });
   }
 
   function handleClickAgainst(event) {
     event.preventDefault(); // stop the auto jump of the cursor
     var button = document.getElementById(props.id + "button");
     button.click();
-    props.setSelectState({ mode: "against", source: props.id });
+    props.setSelectState({
+      mode: "against",
+      source: props.id,
+      isSufficient: true,
+    });
   }
 
   function handleSelectClick() {

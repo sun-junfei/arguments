@@ -109,7 +109,7 @@ code {
   line-height: 20px;
   text-align: center;
   opacity: 0;
-  font-family: 'Times New Roman'
+  font-family: 'Times New Roman';
 }
 
 .toolbox_sidebar ul li .component_btn:hover + .tooltip{
@@ -169,6 +169,12 @@ code {
 }
 
 /* for inputbox */
+
+svg.leader-line> g  { pointer-events: auto!important; }
+
+.leader-line {
+  z-index: 0;
+}
 
 .general_box{
   z-index: 1;
