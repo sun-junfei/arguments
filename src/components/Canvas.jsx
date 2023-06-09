@@ -6,6 +6,7 @@ import Singlebox from "./Inputbox/Singlebox";
 import { click } from "@testing-library/user-event/dist/click";
 import { useEffect } from "react";
 import { hover } from "@testing-library/user-event/dist/hover";
+import Linemenu from "./Linemenu";
 
 function Canvas(props) {
   const [defCount, setDefCount] = useState(1);
@@ -24,6 +25,7 @@ function Canvas(props) {
   const [noteList, setNoteList] = useState([]);
 
   const lines = useRef([]);
+  const lineSelectionRef = useRef(props.lineSelection);
 
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
@@ -58,7 +60,9 @@ function Canvas(props) {
   }
 
   const handleOnClick = (event) => {
-    /* in selectState, set the selectState to null */
+    /* in lineSelection, set the selectState to null */
+
+    /* exists selectState, set the line select to null*/
     if (props.selectState !== null) {
       props.setSelectState(null);
       return;
@@ -112,7 +116,7 @@ function Canvas(props) {
         {
           color: props.selectState.mode === "for" ? "#00DFA2" : "#FF0060",
           dash: { animation: true },
-          size: 2,
+          size: 4,
         }
       );
 
@@ -134,21 +138,59 @@ function Canvas(props) {
   }, [mousePosition, props.selectState]);
 
   useEffect(() => {
-    function buildLeaderLines(boxList, prefix) {
+    function buildLeaderLines(boxList, setBoxList, prefix) {
       const newLines = [];
       if (boxList) {
         boxList.forEach((item) => {
           item.fromList.forEach((from) => {
             const lineOptions = {
               color: from.mode === "for" ? "#00DFA2" : "#FF0060",
-              size: 2.5,
+              size: from.isSufficient ? 6 : 4,
               middleLabel: from.mode === "for" ? "supports" : "against",
+              startLabel: LeaderLine.pathLabel(
+                from.isSufficient ? "(sufficient)" : ""
+              ),
+              outline:
+                props.lineSelection !== null &&
+                props.lineSelection.source === from.source &&
+                props.lineSelection.to === prefix + item.index,
+              outlineColor: "#2ca4fa",
+              outlineSize: 0.5,
+              endPlugOutline:
+                props.lineSelection !== null &&
+                props.lineSelection.source === from.source &&
+                props.lineSelection.to === prefix + item.index,
             };
-            const line = new LeaderLine(
+            var line = new LeaderLine(
               document.getElementById(from.source),
               document.getElementById(prefix + item.index),
               lineOptions
             );
+
+            document
+              .querySelector(".leader-line:last-of-type")
+              .addEventListener("click", function () {
+                props.setLineSelection({
+                  source: from.source,
+                  to: prefix + item.index,
+                  setList: setBoxList,
+                  prefix: prefix,
+                });
+              });
+
+            document
+              .querySelector(".leader-line:last-of-type")
+              .addEventListener("contextmenu", function (event) {
+                handleLineMenu(event);
+                props.setLineSelection({
+                  source: from.source,
+                  to: prefix + item.index,
+                  setList: setBoxList,
+                  prefix: prefix,
+                  mode: from.mode,
+                  isSufficient: from.isSufficient,
+                });
+              });
 
             newLines.push(line);
           });
@@ -158,23 +200,78 @@ function Canvas(props) {
     }
 
     lines.current = [
-      ...buildLeaderLines(defList, "Def "),
-      ...buildLeaderLines(propList, "Prop "),
-      ...buildLeaderLines(justList, "Just "),
-      ...buildLeaderLines(conList, "Con "),
-      ...buildLeaderLines(noteList, "Note "),
+      ...buildLeaderLines(defList, setDefList, "Def "),
+      ...buildLeaderLines(propList, setPropList, "Prop "),
+      ...buildLeaderLines(justList, setJustList, "Just "),
+      ...buildLeaderLines(conList, setConList, "Con "),
+      ...buildLeaderLines(noteList, setNoteList, "Note "),
     ];
+
+    console.log(props.lineSelection);
 
     return () => {
       lines.current.forEach((line) => line.remove());
     };
-  }, [defList, propList, justList, conList, noteList]);
+  }, [defList, propList, justList, conList, noteList, props.lineSelection]);
 
   function handleCanvasDrag() {
     lines.current.map((line) => {
       line.position();
     });
   }
+
+  const handleLineMenu = (event) => {
+    event.preventDefault(); // Prevent the default menu from appearing
+    // Handle the right-click event here
+    props.setMenuVisible(true);
+
+    const canvasRect = canvasRef.current.getBoundingClientRect();
+    const posX = event.clientX - canvasRect.left;
+    const posY = event.clientY - canvasRect.top;
+    props.setMenuPosition({ x: posX, y: posY });
+  };
+
+  /* for relation deletion */
+  useEffect(() => {
+    lineSelectionRef.current = props.lineSelection;
+  }, [props.lineSelection]);
+
+  function updateLine(lineSelection, update) {
+    if (lineSelection !== null) {
+      lineSelection.setList((prevItem) => {
+        var to_return = [];
+        for (var i = 0; i < prevItem.length; i++) {
+          if (lineSelection.prefix + prevItem[i].index !== lineSelection.to) {
+            to_return.push(prevItem[i]);
+          } else {
+            to_return.push(update(lineSelection, prevItem[i]));
+          }
+        }
+
+        return to_return;
+      });
+    }
+  }
+
+  function deleteLine(lineSelection, item) {
+    return {
+      index: item.index,
+      isAbled: item.isAbled, // need to change
+      isGranted: item.isGranted ? false : true,
+      X: item.X,
+      Y: item.Y,
+      fromList: item.fromList.filter(
+        (from) => from.source !== lineSelection.source
+      ),
+    };
+  }
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Delete" && lineSelectionRef.current !== null) {
+      updateLine(lineSelectionRef.current, deleteLine);
+      props.setLineSelection(null);
+    }
+  });
 
   return (
     <Draggable
@@ -188,6 +285,15 @@ function Canvas(props) {
         onClick={handleOnClick}
         ref={canvasRef}
       >
+        {props.menuVisible && (
+          <Linemenu
+            xPos={props.menuPosition.x}
+            yPos={props.menuPosition.y}
+            lineSelection={props.lineSelection}
+            updateLine={updateLine}
+            deleteLine={deleteLine}
+          />
+        )}
         <div
           id="for_seek"
           style={{
