@@ -122,9 +122,33 @@ const useAutosizeInput = (termboxRef, inputRef, value) => {
   }, [inputRef, value]);
 };
 
+function handleAbleLogic(item, boxDict) {
+  if (item.isGranted) {
+    return true;
+  } else {
+    for (var i = 0; i < item.fromList.length; i++) {
+      const from = item.fromList[i];
+      if (
+        from.mode === "for" &&
+        from.isSufficient &&
+        handleAbleLogic(boxDict[from.source], boxDict)
+      ) {
+        return true;
+      } else if (
+        from.mode === "against" &&
+        from.isSufficient &&
+        handleAbleLogic(boxDict[from.source], boxDict)
+      ) {
+        return false;
+      }
+    }
+  }
+}
+
 export {
   useMousePosition,
   useAutosizeTextArea,
   useAutosizeInput,
   useAutosizeTextAreaResize,
+  handleAbleLogic,
 };

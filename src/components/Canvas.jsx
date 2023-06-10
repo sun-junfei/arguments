@@ -7,22 +7,20 @@ import { click } from "@testing-library/user-event/dist/click";
 import { useEffect } from "react";
 import { hover } from "@testing-library/user-event/dist/hover";
 import Linemenu from "./Linemenu";
+import { handleAbleLogic } from "./Util";
 
 function Canvas(props) {
   const [defCount, setDefCount] = useState(1);
-  const [defList, setDefList] = useState([]);
 
   const [propCount, setPropCount] = useState(1);
-  const [propList, setPropList] = useState([]);
 
   const [justCount, setJustCount] = useState(1);
-  const [justList, setJustList] = useState([]);
 
   const [conCount, setConCount] = useState(1);
-  const [conList, setConList] = useState([]);
 
   const [noteCount, setNoteCount] = useState(1);
-  const [noteList, setNoteList] = useState([]);
+
+  const [boxDict, setBoxDict] = useState({});
 
   const lines = useRef([]);
   const lineSelectionRef = useRef(props.lineSelection);
@@ -33,27 +31,32 @@ function Canvas(props) {
 
   const canvasRef = useRef(null);
 
-  function deleteList(index, setList) {
-    setList((prevItems) => {
-      return prevItems.filter((item) => {
-        return item.index !== index;
-      });
+  function deleteDict(id, boxDict, setBoxDict) {
+    setBoxDict((prevItems) => {
+      var to_return = {};
+
+      for (const key in boxDict) {
+        if (key !== id) {
+          to_return[key] = prevItems[key];
+        }
+      }
+
+      return to_return;
     });
   }
 
-  function addList(newPos, setList, count, setCount) {
-    setList((prevDev) => {
-      return [
-        ...prevDev,
-        {
+  function addDict(newPos, key, count, setCount) {
+    setBoxDict(() => {
+      return {
+        ...boxDict,
+        [key]: {
           index: count,
-          isAbled: true,
           isGranted: true,
           X: newPos.x,
           Y: newPos.y,
           fromList: [],
         },
-      ];
+      };
     });
 
     setCount(count + 1);
@@ -78,23 +81,23 @@ function Canvas(props) {
 
     switch (props.clickedList[0]) {
       case "def":
-        addList(newPosition, setDefList, defCount, setDefCount);
+        addDict(newPosition, "Def " + defCount, defCount, setDefCount);
         props.clickedList[1](null);
         break;
       case "prop":
-        addList(newPosition, setPropList, propCount, setPropCount);
+        addDict(newPosition, "Prop " + propCount, propCount, setPropCount);
         props.clickedList[1](null);
         break;
       case "just":
-        addList(newPosition, setJustList, justCount, setJustCount);
+        addDict(newPosition, "Just " + justCount, justCount, setJustCount);
         props.clickedList[1](null);
         break;
       case "con":
-        addList(newPosition, setConList, conCount, setConCount);
+        addDict(newPosition, "Con " + conCount, conCount, setConCount);
         props.clickedList[1](null);
         break;
       case "note":
-        addList(newPosition, setNoteList, noteCount, setNoteCount);
+        addDict(newPosition, "Note " + noteCount, noteCount, setNoteCount);
         props.clickedList[1](null);
         break;
       default:
@@ -106,6 +109,15 @@ function Canvas(props) {
 
   useEffect(() => {
     if (props.selectState !== null) {
+      let line_color;
+      if (props.selectState.mode === "for") {
+        line_color = "#00DFA2";
+      } else if (props.selectState.mode === "against") {
+        line_color = "#FF0060";
+      } else {
+        line_color = "#080202";
+      }
+
       const line = new LeaderLine(
         // Start point (can be an element or coordinates)
         document.getElementById(props.selectState.source),
@@ -114,7 +126,7 @@ function Canvas(props) {
         document.getElementById("for_seek"),
         // Optional configuration options
         {
-          color: props.selectState.mode === "for" ? "#00DFA2" : "#FF0060",
+          color: line_color,
           dash: { animation: true },
           size: 4,
         }
@@ -138,81 +150,79 @@ function Canvas(props) {
   }, [mousePosition, props.selectState]);
 
   useEffect(() => {
-    function buildLeaderLines(boxList, setBoxList, prefix) {
+    function buildLeaderLines(boxDict) {
       const newLines = [];
-      if (boxList) {
-        boxList.forEach((item) => {
-          item.fromList.forEach((from) => {
-            const lineOptions = {
-              color: from.mode === "for" ? "#00DFA2" : "#FF0060",
-              size: from.isSufficient ? 6 : 4,
-              middleLabel: from.mode === "for" ? "supports" : "against",
-              startLabel: LeaderLine.pathLabel(
-                from.isSufficient ? "(sufficient)" : ""
-              ),
-              outline:
-                props.lineSelection !== null &&
-                props.lineSelection.source === from.source &&
-                props.lineSelection.to === prefix + item.index,
-              outlineColor: "#2ca4fa",
-              outlineSize: 0.5,
-              endPlugOutline:
-                props.lineSelection !== null &&
-                props.lineSelection.source === from.source &&
-                props.lineSelection.to === prefix + item.index,
-            };
-            var line = new LeaderLine(
-              document.getElementById(from.source),
-              document.getElementById(prefix + item.index),
-              lineOptions
-            );
+      for (const key in boxDict) {
+        boxDict[key].fromList.forEach((from) => {
+          let line_color;
+          let middle_content;
+          if (from.mode === "for") {
+            line_color = "#00DFA2";
+            middle_content = "supports";
+          } else if (from.mode === "against") {
+            line_color = "#FF0060";
+            middle_content = "against";
+          } else {
+            line_color = "#080202";
+            middle_content = "for";
+          }
+          const lineOptions = {
+            color: line_color,
+            size: from.isSufficient ? 6 : 4,
+            middleLabel: middle_content,
+            startLabel: LeaderLine.pathLabel(
+              from.isSufficient ? "(sufficient)" : ""
+            ),
+            outline:
+              props.lineSelection !== null &&
+              props.lineSelection.source === from.source &&
+              props.lineSelection.to === key,
+            outlineColor: "#2ca4fa",
+            outlineSize: 0.5,
+            endPlugOutline:
+              props.lineSelection !== null &&
+              props.lineSelection.source === from.source &&
+              props.lineSelection.to === key,
+          };
+          var line = new LeaderLine(
+            document.getElementById(from.source),
+            document.getElementById(key),
+            lineOptions
+          );
 
-            document
-              .querySelector(".leader-line:last-of-type")
-              .addEventListener("click", function () {
-                props.setLineSelection({
-                  source: from.source,
-                  to: prefix + item.index,
-                  setList: setBoxList,
-                  prefix: prefix,
-                });
+          document
+            .querySelector(".leader-line:last-of-type")
+            .addEventListener("click", function () {
+              props.setLineSelection({
+                source: from.source,
+                to: key,
               });
+            });
 
-            document
-              .querySelector(".leader-line:last-of-type")
-              .addEventListener("contextmenu", function (event) {
-                handleLineMenu(event);
-                props.setLineSelection({
-                  source: from.source,
-                  to: prefix + item.index,
-                  setList: setBoxList,
-                  prefix: prefix,
-                  mode: from.mode,
-                  isSufficient: from.isSufficient,
-                });
+          document
+            .querySelector(".leader-line:last-of-type")
+            .addEventListener("contextmenu", function (event) {
+              handleLineMenu(event);
+              props.setLineSelection({
+                source: from.source,
+                to: key,
+                mode: from.mode,
+                isSufficient: from.isSufficient,
               });
+            });
 
-            newLines.push(line);
-          });
+          newLines.push(line);
         });
       }
       return newLines;
     }
 
-    lines.current = [
-      ...buildLeaderLines(defList, setDefList, "Def "),
-      ...buildLeaderLines(propList, setPropList, "Prop "),
-      ...buildLeaderLines(justList, setJustList, "Just "),
-      ...buildLeaderLines(conList, setConList, "Con "),
-      ...buildLeaderLines(noteList, setNoteList, "Note "),
-    ];
-
-    console.log(props.lineSelection);
+    lines.current = buildLeaderLines(boxDict);
 
     return () => {
       lines.current.forEach((line) => line.remove());
     };
-  }, [defList, propList, justList, conList, noteList, props.lineSelection]);
+  }, [boxDict, props.lineSelection]);
 
   function handleCanvasDrag() {
     lines.current.map((line) => {
@@ -238,13 +248,13 @@ function Canvas(props) {
 
   function updateLine(lineSelection, update) {
     if (lineSelection !== null) {
-      lineSelection.setList((prevItem) => {
-        var to_return = [];
-        for (var i = 0; i < prevItem.length; i++) {
-          if (lineSelection.prefix + prevItem[i].index !== lineSelection.to) {
-            to_return.push(prevItem[i]);
+      setBoxDict((prevItem) => {
+        var to_return = {};
+        for (const key in prevItem) {
+          if (key !== lineSelection.to) {
+            to_return[key] = prevItem[key];
           } else {
-            to_return.push(update(lineSelection, prevItem[i]));
+            to_return[key] = update(lineSelection, prevItem[key]);
           }
         }
 
@@ -256,8 +266,8 @@ function Canvas(props) {
   function deleteLine(lineSelection, item) {
     return {
       index: item.index,
-      isAbled: item.isAbled, // need to change
-      isGranted: item.isGranted ? false : true,
+
+      isGranted: item.isGranted,
       X: item.X,
       Y: item.Y,
       fromList: item.fromList.filter(
@@ -292,6 +302,8 @@ function Canvas(props) {
             lineSelection={props.lineSelection}
             updateLine={updateLine}
             deleteLine={deleteLine}
+            boxDict={boxDict}
+            setBoxDict={setBoxDict}
           />
         )}
         <div
@@ -302,114 +314,123 @@ function Canvas(props) {
             top: mousePosition.y,
           }}
         ></div>
-        {defList.map((def, id) => {
-          return (
-            <Generalbox
-              key={def.index}
-              id={`Def ${def.index}`}
-              positionX={def.X}
-              positionY={def.Y}
-              index={def.index}
-              isAbled={def.isAbled}
-              isGranted={def.isGranted}
-              fromList={def.fromList}
-              singleClass={"Def"}
-              fullClass={"Definition"}
-              handleDelete={deleteList}
-              handleList={setDefList}
-              selectState={props.selectState}
-              setSelectState={props.setSelectState}
-              lines={lines}
-            />
-          );
-        })}
-
-        {propList.map((prop, id) => {
-          return (
-            <Generalbox
-              key={prop.index}
-              id={`Prop ${prop.index}`}
-              positionX={prop.X}
-              positionY={prop.Y}
-              index={prop.index}
-              isAbled={prop.isAbled}
-              isGranted={prop.isGranted}
-              fromList={prop.fromList}
-              singleClass={"Prop"}
-              fullClass={"Proposition"}
-              handleDelete={deleteList}
-              handleList={setPropList}
-              selectState={props.selectState}
-              setSelectState={props.setSelectState}
-              lines={lines}
-            />
-          );
-        })}
-        {justList.map((just, id) => {
-          return (
-            <Generalbox
-              key={just.index}
-              id={`Just ${just.index}`}
-              positionX={just.X}
-              positionY={just.Y}
-              index={just.index}
-              isAbled={just.isAbled}
-              isGranted={just.isGranted}
-              fromList={just.fromList}
-              singleClass={"Just"}
-              fullClass={"Justification"}
-              handleDelete={deleteList}
-              handleList={setJustList}
-              selectState={props.selectState}
-              setSelectState={props.setSelectState}
-              lines={lines}
-            />
-          );
-        })}
-
-        {conList.map((con, id) => {
-          return (
-            <Generalbox
-              key={con.index}
-              id={`Con ${con.index}`}
-              positionX={con.X}
-              positionY={con.Y}
-              index={con.index}
-              isAbled={con.isAbled}
-              isGranted={con.isGranted}
-              fromList={con.fromList}
-              singleClass={"Con"}
-              fullClass={"Counter Argument"}
-              handleDelete={deleteList}
-              handleList={setConList}
-              selectState={props.selectState}
-              setSelectState={props.setSelectState}
-              lines={lines}
-            />
-          );
-        })}
-
-        {noteList.map((note, id) => {
-          return (
-            <Generalbox
-              key={note.index}
-              id={`Note ${note.index}`}
-              positionX={note.X}
-              positionY={note.Y}
-              index={note.index}
-              isAbled={note.isAbled}
-              isGranted={note.isGranted}
-              fromList={note.fromList}
-              singleClass={"Note"}
-              fullClass={"Side Note"}
-              handleDelete={deleteList}
-              handleList={setNoteList}
-              selectState={props.selectState}
-              setSelectState={props.setSelectState}
-              lines={lines}
-            />
-          );
-        })}
+        {boxDict &&
+          Object.keys(boxDict).map((key) => {
+            // eslint-disable-next-line no-lone-blocks
+            {
+              if (key.startsWith("Def")) {
+                const def = boxDict[key];
+                return (
+                  <Generalbox
+                    key={def.index}
+                    id={key}
+                    positionX={def.X}
+                    positionY={def.Y}
+                    index={def.index}
+                    isGranted={def.isGranted}
+                    isAbled={handleAbleLogic(def, boxDict)}
+                    fromList={def.fromList}
+                    singleClass={"Def"}
+                    fullClass={"Definition"}
+                    handleDelete={deleteDict}
+                    boxDict={boxDict}
+                    setBoxDict={setBoxDict}
+                    selectState={props.selectState}
+                    setSelectState={props.setSelectState}
+                    lines={lines}
+                  />
+                );
+              } else if (key.startsWith("Prop")) {
+                const prop = boxDict[key];
+                return (
+                  <Generalbox
+                    key={prop.index}
+                    id={key}
+                    positionX={prop.X}
+                    positionY={prop.Y}
+                    index={prop.index}
+                    isGranted={prop.isGranted}
+                    isAbled={handleAbleLogic(prop, boxDict)}
+                    fromList={prop.fromList}
+                    singleClass={"Prop"}
+                    fullClass={"Proposition"}
+                    handleDelete={deleteDict}
+                    boxDict={boxDict}
+                    setBoxDict={setBoxDict}
+                    selectState={props.selectState}
+                    setSelectState={props.setSelectState}
+                    lines={lines}
+                  />
+                );
+              } else if (key.startsWith("Just")) {
+                const just = boxDict[key];
+                return (
+                  <Generalbox
+                    key={just.index}
+                    id={key}
+                    positionX={just.X}
+                    positionY={just.Y}
+                    index={just.index}
+                    isGranted={just.isGranted}
+                    isAbled={handleAbleLogic(just, boxDict)}
+                    fromList={just.fromList}
+                    singleClass={"Just"}
+                    fullClass={"Justification"}
+                    handleDelete={deleteDict}
+                    boxDict={boxDict}
+                    setBoxDict={setBoxDict}
+                    selectState={props.selectState}
+                    setSelectState={props.setSelectState}
+                    lines={lines}
+                  />
+                );
+              } else if (key.startsWith("Con")) {
+                const con = boxDict[key];
+                return (
+                  <Generalbox
+                    key={con.index}
+                    id={key}
+                    positionX={con.X}
+                    positionY={con.Y}
+                    index={con.index}
+                    isGranted={con.isGranted}
+                    isAbled={handleAbleLogic(con, boxDict)}
+                    fromList={con.fromList}
+                    singleClass={"Con"}
+                    fullClass={"Counter Argument"}
+                    handleDelete={deleteDict}
+                    boxDict={boxDict}
+                    setBoxDict={setBoxDict}
+                    selectState={props.selectState}
+                    setSelectState={props.setSelectState}
+                    lines={lines}
+                  />
+                );
+              } else if (key.startsWith("Note")) {
+                const note = boxDict[key];
+                return (
+                  <Generalbox
+                    key={note.index}
+                    id={key}
+                    positionX={note.X}
+                    positionY={note.Y}
+                    index={note.index}
+                    isGranted={note.isGranted}
+                    isAbled={handleAbleLogic(note, boxDict)}
+                    fromList={note.fromList}
+                    singleClass={"Note"}
+                    fullClass={"Side Note"}
+                    handleDelete={deleteDict}
+                    boxDict={boxDict}
+                    setBoxDict={setBoxDict}
+                    selectState={props.selectState}
+                    setSelectState={props.setSelectState}
+                    lines={lines}
+                  />
+                );
+              }
+            }
+          })}
       </div>
     </Draggable>
   );

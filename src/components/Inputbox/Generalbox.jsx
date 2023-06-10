@@ -1,5 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 import Draggable, { DraggableCore } from "react-draggable";
+import { handleAbleLogic } from "../Util";
 
 import {
   useAutosizeTextArea,
@@ -21,21 +22,20 @@ function Generalbox(props) {
 
   /* these are for operation info */
   function handleGrantClick() {
-    props.handleList((prevItem) => {
-      var to_return = [];
+    props.setBoxDict((prevItem) => {
+      var to_return = {};
 
-      for (var i = 0; i < prevItem.length; i++) {
-        if (prevItem[i].index !== props.index) {
-          to_return.push(prevItem[i]);
+      for (const key in props.boxDict) {
+        if (key !== props.id) {
+          to_return[key] = prevItem[key];
         } else {
-          to_return.push({
-            index: prevItem[i].index,
-            isAbled: prevItem[i].isAbled,
-            isGranted: prevItem[i].isGranted ? false : true,
-            X: prevItem[i].X,
-            Y: prevItem[i].Y,
-            fromList: prevItem[i].fromList,
-          });
+          to_return[key] = {
+            index: prevItem[key].index,
+            isGranted: prevItem[key].isGranted ? false : true,
+            X: prevItem[key].X,
+            Y: prevItem[key].Y,
+            fromList: prevItem[key].fromList,
+          };
         }
       }
 
@@ -67,6 +67,17 @@ function Generalbox(props) {
     });
   }
 
+  function handleClickNeutral(event) {
+    event.preventDefault(); // stop the auto jump of the cursor
+    var button = document.getElementById(props.id + "button");
+    button.click();
+    props.setSelectState({
+      mode: "neutral",
+      source: props.id,
+      isSufficient: false,
+    });
+  }
+
   function handleSelectClick() {
     if (props.selectState !== null) {
       var alreadyExist = false;
@@ -78,28 +89,29 @@ function Generalbox(props) {
       }
 
       if (!alreadyExist && props.selectState.source !== props.id) {
-        props.handleList((prevItem) => {
-          var to_return = [];
+        props.setBoxDict((prevItem) => {
+          var to_return = {};
 
-          for (var i = 0; i < prevItem.length; i++) {
-            if (prevItem[i].index !== props.index) {
-              to_return.push(prevItem[i]);
+          for (const key in props.boxDict) {
+            if (key !== props.id) {
+              to_return[key] = prevItem[key];
             } else {
-              if (!prevItem[i].fromList.includes(props.selectState.source)) {
-                to_return.push({
-                  index: prevItem[i].index,
-                  isAbled: prevItem[i].isAbled, // need to change
-                  isGranted: false,
-                  X: prevItem[i].X,
-                  Y: prevItem[i].Y,
-                  fromList: [...prevItem[i].fromList, props.selectState],
-                });
+              if (!prevItem[key].fromList.includes(props.selectState.source)) {
+                to_return[key] = {
+                  index: prevItem[key].index,
+                  isGranted:
+                    props.selectState.mode === "neutral"
+                      ? prevItem[key].isGranted
+                      : false,
+                  X: prevItem[key].X,
+                  Y: prevItem[key].Y,
+                  fromList: [...prevItem[key].fromList, props.selectState],
+                };
               } else {
-                to_return.push(prevItem[i]);
+                to_return[key] = prevItem[key];
               }
             }
           }
-
           return to_return;
         });
       }
@@ -170,7 +182,7 @@ function Generalbox(props) {
   /* Delete this Box */
 
   function handleDeleteClick() {
-    props.handleDelete(props.index, props.handleList);
+    props.handleDelete(props.id, props.boxDict, props.setBoxDict);
   }
 
   return (
@@ -242,17 +254,29 @@ function Generalbox(props) {
                     ref={dropdownRef}
                   >{`${props.singleClass} ${props.index}:`}</button>
                   <ul class="dropdown-menu operation_menu">
-                    {props.singleClass !== "Def" && (
+                    {props.singleClass !== "Def" &&
+                      props.singleClass !== "Note" && (
+                        <li>
+                          <div class="dropdown-item" onClick={handleClickFor}>
+                            Supports
+                          </div>
+                        </li>
+                      )}
+                    {props.singleClass !== "Def" &&
+                      props.singleClass !== "Note" && (
+                        <li>
+                          <div
+                            class="dropdown-item"
+                            onClick={handleClickAgainst}
+                          >
+                            Against
+                          </div>
+                        </li>
+                      )}
+                    {props.singleClass === "Note" && (
                       <li>
-                        <div class="dropdown-item" onClick={handleClickFor}>
+                        <div class="dropdown-item" onClick={handleClickNeutral}>
                           For
-                        </div>
-                      </li>
-                    )}
-                    {props.singleClass !== "Def" && (
-                      <li>
-                        <div class="dropdown-item" onClick={handleClickAgainst}>
-                          Against
                         </div>
                       </li>
                     )}
