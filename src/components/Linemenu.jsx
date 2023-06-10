@@ -52,6 +52,8 @@ const Linemenu = (props) => {
     props.updateLine(props.lineSelection, switchSuffice);
   }
 
+  function handleClickWith() {}
+
   return (
     <div
       class="list-group"
@@ -83,6 +85,19 @@ const Linemenu = (props) => {
           }`}
         </div>
       )}
+      {props.lineSelection.mode !== "neutral" &&
+        !props.lineSelection.isSufficient && (
+          <div
+            class="list-group-item list-group-item-action"
+            onClick={handleClickWith}
+          >
+            {`${
+              props.lineSelection.sufficientWith.length === 0
+                ? "set as sufficient with ..."
+                : "drop sufficient with"
+            }`}
+          </div>
+        )}
       <div
         class="list-group-item list-group-item-action"
         onClick={handleClickDelete}

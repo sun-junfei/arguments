@@ -196,6 +196,7 @@ function Canvas(props) {
               props.setLineSelection({
                 source: from.source,
                 to: key,
+                sufficientWith: from.sufficientWith,
               });
             });
 
@@ -207,6 +208,7 @@ function Canvas(props) {
                 source: from.source,
                 to: key,
                 mode: from.mode,
+                sufficientWith: from.sufficientWith,
                 isSufficient: from.isSufficient,
               });
             });
@@ -266,7 +268,6 @@ function Canvas(props) {
   function deleteLine(lineSelection, item) {
     return {
       index: item.index,
-
       isGranted: item.isGranted,
       X: item.X,
       Y: item.Y,
