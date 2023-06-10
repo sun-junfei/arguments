@@ -9,8 +9,8 @@ const Linemenu = (props) => {
   function switchMode(lineSelection, item) {
     return {
       index: item.index,
-      isAbled: item.isAbled, // need to change
-      isGranted: item.isGranted ? false : true,
+
+      isGranted: item.isGranted,
       X: item.X,
       Y: item.Y,
       fromList: item.fromList.map((from) => {
@@ -32,8 +32,8 @@ const Linemenu = (props) => {
   function switchSuffice(lineSelection, item) {
     return {
       index: item.index,
-      isAbled: item.isAbled, // need to change
-      isGranted: item.isGranted ? false : true,
+
+      isGranted: item.isGranted,
       X: item.X,
       Y: item.Y,
       fromList: item.fromList.map((from) => {
@@ -63,22 +63,26 @@ const Linemenu = (props) => {
         fontSize: 12,
       }}
     >
-      <div
-        class="list-group-item list-group-item-action"
-        onClick={handleClickSuffice}
-      >
-        {`set as ${
-          props.lineSelection.isSufficient ? "not sufficient" : "sufficient"
-        }`}
-      </div>
-      <div
-        class="list-group-item list-group-item-action"
-        onClick={handleClickMode}
-      >
-        {`set as ${
-          props.lineSelection.mode === "for" ? "against" : "supports"
-        }`}
-      </div>
+      {props.lineSelection.mode !== "neutral" && (
+        <div
+          class="list-group-item list-group-item-action"
+          onClick={handleClickSuffice}
+        >
+          {`set as ${
+            props.lineSelection.isSufficient ? "not sufficient" : "sufficient"
+          }`}
+        </div>
+      )}
+      {props.lineSelection.mode !== "neutral" && (
+        <div
+          class="list-group-item list-group-item-action"
+          onClick={handleClickMode}
+        >
+          {`set as ${
+            props.lineSelection.mode === "for" ? "against" : "supports"
+          }`}
+        </div>
+      )}
       <div
         class="list-group-item list-group-item-action"
         onClick={handleClickDelete}
