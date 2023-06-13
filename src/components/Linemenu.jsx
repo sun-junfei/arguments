@@ -9,7 +9,6 @@ const Linemenu = (props) => {
   function switchMode(lineSelection, item) {
     return {
       index: item.index,
-
       isGranted: item.isGranted,
       X: item.X,
       Y: item.Y,
@@ -32,7 +31,6 @@ const Linemenu = (props) => {
   function switchSuffice(lineSelection, item) {
     return {
       index: item.index,
-
       isGranted: item.isGranted,
       X: item.X,
       Y: item.Y,
@@ -52,7 +50,11 @@ const Linemenu = (props) => {
     props.updateLine(props.lineSelection, switchSuffice);
   }
 
-  function handleClickWith() {}
+  function handleClickWith() {
+    props.setWithSelection((prevWiths) => {
+      return [...prevWiths, props.lineSelection]; // needs to change!
+    });
+  }
 
   return (
     <div

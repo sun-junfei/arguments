@@ -305,6 +305,8 @@ function Canvas(props) {
             deleteLine={deleteLine}
             boxDict={boxDict}
             setBoxDict={setBoxDict}
+            withSelection={props.withSelection}
+            setWithSelection={props.setWithSelection}
           />
         )}
         <div
@@ -339,6 +341,8 @@ function Canvas(props) {
                     selectState={props.selectState}
                     setSelectState={props.setSelectState}
                     lines={lines}
+                    withSelection={props.withSelection}
+                    setWithSelection={props.setWithSelection}
                   />
                 );
               } else if (key.startsWith("Prop")) {
@@ -361,6 +365,8 @@ function Canvas(props) {
                     selectState={props.selectState}
                     setSelectState={props.setSelectState}
                     lines={lines}
+                    withSelection={props.withSelection}
+                    setWithSelection={props.setWithSelection}
                   />
                 );
               } else if (key.startsWith("Just")) {
@@ -383,6 +389,8 @@ function Canvas(props) {
                     selectState={props.selectState}
                     setSelectState={props.setSelectState}
                     lines={lines}
+                    withSelection={props.withSelection}
+                    setWithSelection={props.setWithSelection}
                   />
                 );
               } else if (key.startsWith("Con")) {
@@ -405,6 +413,8 @@ function Canvas(props) {
                     selectState={props.selectState}
                     setSelectState={props.setSelectState}
                     lines={lines}
+                    withSelection={props.withSelection}
+                    setWithSelection={props.setWithSelection}
                   />
                 );
               } else if (key.startsWith("Note")) {
@@ -427,6 +437,8 @@ function Canvas(props) {
                     selectState={props.selectState}
                     setSelectState={props.setSelectState}
                     lines={lines}
+                    withSelection={props.withSelection}
+                    setWithSelection={props.setWithSelection}
                   />
                 );
               }

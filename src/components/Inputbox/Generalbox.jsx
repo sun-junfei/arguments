@@ -57,7 +57,7 @@ function Generalbox(props) {
       mode: "for",
       source: props.id,
       isSufficient: true,
-      sufficientWith: [],
+      sufficientGroup: [], // should be allowed to contain mulitple group indices
     });
   }
 
@@ -69,7 +69,7 @@ function Generalbox(props) {
       mode: "against",
       source: props.id,
       isSufficient: true,
-      sufficientWith: [],
+      sufficientGroup: [], // should be allowed to contain mulitple group indices
     });
   }
 
@@ -81,7 +81,7 @@ function Generalbox(props) {
       mode: "neutral",
       source: props.id,
       isSufficient: false,
-      sufficientWith: [],
+      sufficientGroup: [], // should be allowed to contain mulitple group indices
     });
   }
 

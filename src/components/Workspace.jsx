@@ -9,6 +9,7 @@ function Workspace(props) {
   const [clicked, setClicked] = useState(null);
   const [selectState, setSelectState] = useState(null);
   const [lineSelection, setLineSelection] = useState(null);
+  const [withSelection, setWithSelection] = useState(null);
   const [menuVisible, setMenuVisible] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
 
@@ -43,6 +44,8 @@ function Workspace(props) {
         setMenuVisible={setMenuVisible}
         menuPosition={menuPosition}
         setMenuPosition={setMenuPosition}
+        withSelection={withSelection}
+        setWithSelection={setWithSelection}
       />
       <Toolbox
         clickedList={[clicked, setClicked]}
