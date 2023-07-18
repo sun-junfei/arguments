@@ -50,10 +50,39 @@ const Linemenu = (props) => {
     props.updateLine(props.lineSelection, switchSuffice);
   }
 
-  function handleClickWith() {
-    props.setWithSelection((prevWiths) => {
-      return [...prevWiths, props.lineSelection]; // needs to change!
-    });
+  function dropSufficientGroup(lineSelection, item) {
+    return {
+      index: item.index,
+      isGranted: item.isGranted,
+      X: item.X,
+      Y: item.Y,
+      fromList: item.fromList.map((from) => {
+        if (from.source === lineSelection.source) {
+          return {
+            ...from,
+            sufficientGroup: [],
+          };
+        }
+        return from;
+      }),
+    };
+  }
+
+  function handleClickGroup() {
+    if (props.lineSelection.sufficientGroup.length === 0) {
+      props.setWithSelection({
+        groupId: props.groupId,
+        mode: props.lineSelection.mode,
+        withList: [
+          {
+            source: props.lineSelection.source,
+            to: props.lineSelection.to,
+          },
+        ],
+      }); // into withSelection mode
+    } else {
+      props.updateLine(props.lineSelection, dropSufficientGroup);
+    }
   }
 
   return (
@@ -91,10 +120,10 @@ const Linemenu = (props) => {
         !props.lineSelection.isSufficient && (
           <div
             class="list-group-item list-group-item-action"
-            onClick={handleClickWith}
+            onClick={handleClickGroup}
           >
             {`${
-              props.lineSelection.sufficientWith.length === 0
+              props.lineSelection.sufficientGroup.length === 0
                 ? "set as sufficient with ..."
                 : "drop sufficient with"
             }`}
