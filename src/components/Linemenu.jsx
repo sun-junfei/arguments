@@ -9,7 +9,6 @@ const Linemenu = (props) => {
   function switchMode(lineSelection, item) {
     return {
       index: item.index,
-
       isGranted: item.isGranted,
       X: item.X,
       Y: item.Y,
@@ -32,7 +31,6 @@ const Linemenu = (props) => {
   function switchSuffice(lineSelection, item) {
     return {
       index: item.index,
-
       isGranted: item.isGranted,
       X: item.X,
       Y: item.Y,
@@ -50,6 +48,41 @@ const Linemenu = (props) => {
 
   function handleClickSuffice() {
     props.updateLine(props.lineSelection, switchSuffice);
+  }
+
+  function dropSufficientGroup(lineSelection, item) {
+    return {
+      index: item.index,
+      isGranted: item.isGranted,
+      X: item.X,
+      Y: item.Y,
+      fromList: item.fromList.map((from) => {
+        if (from.source === lineSelection.source) {
+          return {
+            ...from,
+            sufficientGroup: [],
+          };
+        }
+        return from;
+      }),
+    };
+  }
+
+  function handleClickGroup() {
+    if (props.lineSelection.sufficientGroup.length === 0) {
+      props.setWithSelection({
+        groupId: props.groupId,
+        mode: props.lineSelection.mode,
+        withList: [
+          {
+            source: props.lineSelection.source,
+            to: props.lineSelection.to,
+          },
+        ],
+      }); // into withSelection mode
+    } else {
+      props.updateLine(props.lineSelection, dropSufficientGroup);
+    }
   }
 
   return (
@@ -83,6 +116,19 @@ const Linemenu = (props) => {
           }`}
         </div>
       )}
+      {props.lineSelection.mode !== "neutral" &&
+        !props.lineSelection.isSufficient && (
+          <div
+            class="list-group-item list-group-item-action"
+            onClick={handleClickGroup}
+          >
+            {`${
+              props.lineSelection.sufficientGroup.length === 0
+                ? "set as sufficient with ..."
+                : "drop sufficient with"
+            }`}
+          </div>
+        )}
       <div
         class="list-group-item list-group-item-action"
         onClick={handleClickDelete}

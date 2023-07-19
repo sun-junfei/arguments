@@ -149,11 +149,44 @@ function Canvas(props) {
     }
   }, [mousePosition, props.selectState]);
 
+  function istWithable(withSelection, from, key) {
+    if (withSelection === null) {
+      return false;
+    }
+    if (from.isSufficient) {
+      return false;
+    }
+
+    if (key !== withSelection.withList[0].to) {
+      return false;
+    }
+
+    if (from.mode !== withSelection.mode) {
+      return false;
+    }
+
+    return true;
+  }
+
+  function isInWithList(withSelection, from, key) {
+    if (withSelection === null) {
+      return false;
+    }
+
+    return withSelection.withList.some((item) => {
+      if (from.source === item.source && key === item.to) {
+        return true;
+      }
+      return false;
+    });
+  }
   useEffect(() => {
     function buildLeaderLines(boxDict) {
       const newLines = [];
       for (const key in boxDict) {
         boxDict[key].fromList.forEach((from) => {
+          let withable = istWithable(props.withSelection, from, key);
+          let inWithList = isInWithList(props.withSelection, from, key);
           let line_color;
           let middle_content;
           if (from.mode === "for") {
@@ -174,10 +207,12 @@ function Canvas(props) {
               from.isSufficient ? "(sufficient)" : ""
             ),
             outline:
-              props.lineSelection !== null &&
-              props.lineSelection.source === from.source &&
-              props.lineSelection.to === key,
-            outlineColor: "#2ca4fa",
+              (props.withSelection !== null && inWithList) ||
+              (props.lineSelection !== null &&
+                props.lineSelection.source === from.source &&
+                props.lineSelection.to === key),
+            outlineColor:
+              props.withSelection && withable ? "#F0DE36" : "#2ca4fa",
             outlineSize: 0.5,
             endPlugOutline:
               props.lineSelection !== null &&
@@ -193,10 +228,23 @@ function Canvas(props) {
           document
             .querySelector(".leader-line:last-of-type")
             .addEventListener("click", function () {
-              props.setLineSelection({
-                source: from.source,
-                to: key,
-              });
+              if (!props.withSelection) {
+                props.setLineSelection({
+                  source: from.source,
+                  to: key,
+                  sufficientGroup: from.sufficientGroup,
+                });
+              } else {
+                if (withable && !inWithList) {
+                  props.setWithSelection({
+                    ...props.withSelection,
+                    withList: [
+                      ...props.withSelection.withList,
+                      { source: from.source, to: key },
+                    ],
+                  });
+                }
+              }
             });
 
           document
@@ -207,6 +255,7 @@ function Canvas(props) {
                 source: from.source,
                 to: key,
                 mode: from.mode,
+                sufficientGroup: from.sufficientGroup,
                 isSufficient: from.isSufficient,
               });
             });
@@ -222,7 +271,7 @@ function Canvas(props) {
     return () => {
       lines.current.forEach((line) => line.remove());
     };
-  }, [boxDict, props.lineSelection]);
+  }, [boxDict, props.lineSelection, props.withSelection]);
 
   function handleCanvasDrag() {
     lines.current.map((line) => {
@@ -266,7 +315,6 @@ function Canvas(props) {
   function deleteLine(lineSelection, item) {
     return {
       index: item.index,
-
       isGranted: item.isGranted,
       X: item.X,
       Y: item.Y,
@@ -304,6 +352,10 @@ function Canvas(props) {
             deleteLine={deleteLine}
             boxDict={boxDict}
             setBoxDict={setBoxDict}
+            withSelection={props.withSelection}
+            setWithSelection={props.setWithSelection}
+            groupId={props.groupId}
+            setGroupId={props.setGroupId}
           />
         )}
         <div
@@ -338,6 +390,8 @@ function Canvas(props) {
                     selectState={props.selectState}
                     setSelectState={props.setSelectState}
                     lines={lines}
+                    withSelection={props.withSelection}
+                    setWithSelection={props.setWithSelection}
                   />
                 );
               } else if (key.startsWith("Prop")) {
@@ -360,6 +414,8 @@ function Canvas(props) {
                     selectState={props.selectState}
                     setSelectState={props.setSelectState}
                     lines={lines}
+                    withSelection={props.withSelection}
+                    setWithSelection={props.setWithSelection}
                   />
                 );
               } else if (key.startsWith("Just")) {
@@ -382,6 +438,8 @@ function Canvas(props) {
                     selectState={props.selectState}
                     setSelectState={props.setSelectState}
                     lines={lines}
+                    withSelection={props.withSelection}
+                    setWithSelection={props.setWithSelection}
                   />
                 );
               } else if (key.startsWith("Con")) {
@@ -404,6 +462,8 @@ function Canvas(props) {
                     selectState={props.selectState}
                     setSelectState={props.setSelectState}
                     lines={lines}
+                    withSelection={props.withSelection}
+                    setWithSelection={props.setWithSelection}
                   />
                 );
               } else if (key.startsWith("Note")) {
@@ -426,6 +486,8 @@ function Canvas(props) {
                     selectState={props.selectState}
                     setSelectState={props.setSelectState}
                     lines={lines}
+                    withSelection={props.withSelection}
+                    setWithSelection={props.setWithSelection}
                   />
                 );
               }

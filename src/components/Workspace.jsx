@@ -9,12 +9,15 @@ function Workspace(props) {
   const [clicked, setClicked] = useState(null);
   const [selectState, setSelectState] = useState(null);
   const [lineSelection, setLineSelection] = useState(null);
+  const [withSelection, setWithSelection] = useState(null);
+  const [groupId, setGroupId] = useState(1);
   const [menuVisible, setMenuVisible] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
 
   document.addEventListener("click", (event) => {
     if (!event.target.closest(".leader-line")) {
       handleCloseMenu();
+
       if (lineSelection !== null) {
         setLineSelection(null);
         return;
@@ -43,6 +46,10 @@ function Workspace(props) {
         setMenuVisible={setMenuVisible}
         menuPosition={menuPosition}
         setMenuPosition={setMenuPosition}
+        withSelection={withSelection}
+        setWithSelection={setWithSelection}
+        groupId={groupId}
+        setGroupId={setGroupId}
       />
       <Toolbox
         clickedList={[clicked, setClicked]}
