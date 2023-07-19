@@ -169,22 +169,24 @@ function Canvas(props) {
   }
 
   function isInWithList(withSelection, from, key) {
-    withSelection.withList.forEach((item) => {
+    if (withSelection === null) {
+      return false;
+    }
+
+    return withSelection.withList.some((item) => {
       if (from.source === item.source && key === item.to) {
-        console.log("here");
         return true;
       }
+      return false;
     });
-
-    return false;
   }
-
   useEffect(() => {
     function buildLeaderLines(boxDict) {
       const newLines = [];
       for (const key in boxDict) {
         boxDict[key].fromList.forEach((from) => {
           let withable = istWithable(props.withSelection, from, key);
+          let inWithList = isInWithList(props.withSelection, from, key);
           let line_color;
           let middle_content;
           if (from.mode === "for") {
@@ -205,13 +207,12 @@ function Canvas(props) {
               from.isSufficient ? "(sufficient)" : ""
             ),
             outline:
+              (props.withSelection !== null && inWithList) ||
               (props.lineSelection !== null &&
                 props.lineSelection.source === from.source &&
-                props.lineSelection.to === key) ||
-              (props.withSelection !== null &&
-                isInWithList(props.withSelection, from, key)),
+                props.lineSelection.to === key),
             outlineColor:
-              props.withSelection && withable ? "#F1C93B" : "#2ca4fa",
+              props.withSelection && withable ? "#F0DE36" : "#2ca4fa",
             outlineSize: 0.5,
             endPlugOutline:
               props.lineSelection !== null &&
@@ -234,7 +235,7 @@ function Canvas(props) {
                   sufficientGroup: from.sufficientGroup,
                 });
               } else {
-                if (withable) {
+                if (withable && !inWithList) {
                   props.setWithSelection({
                     ...props.withSelection,
                     withList: [
