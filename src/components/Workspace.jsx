@@ -17,6 +17,7 @@ function Workspace(props) {
   document.addEventListener("click", (event) => {
     if (!event.target.closest(".leader-line")) {
       handleCloseMenu();
+
       if (lineSelection !== null) {
         setLineSelection(null);
         return;
